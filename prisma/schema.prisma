@@ -1,0 +1,546 @@
+// ------------------------------------------------------------------
+// Платформа психологической помощи — модель данных
+// MVP «Студия» (Фаза 1) с заделами под Фазы 2-3 (магазин, маркетплейс)
+//
+// В dev-режиме используется SQLite (file:./dev.db). Поля-массивы хранятся
+// как JSON-строки (см. src/lib/json-list.ts). Enum-поля — как String.
+// В prod-режиме предполагается PostgreSQL: для этого переключите provider
+// и DATABASE_URL, преобразуйте String-поля обратно в enum / String[].
+// ------------------------------------------------------------------
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ===== Пользователи и роли (RBAC) =====
+// Role: CLIENT | PSYCHOLOGIST | ADMIN | CONTENT_MANAGER
+// UserStatus: ACTIVE | PENDING_VERIFICATION | BLOCKED
+
+model User {
+  id              String     @id @default(cuid())
+  email           String?    @unique
+  phone           String?    @unique
+  passwordHash    String
+  role            String     @default("CLIENT")
+  status          String     @default("ACTIVE")
+  displayName     String
+  locale          String     @default("ru")
+  timezone        String     @default("Asia/Bishkek")
+  emailVerifiedAt DateTime?
+  phoneVerifiedAt DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  client          ClientProfile?
+  psychologist    PsychologistProfile?
+  sessions        AuthSession[]
+  notifications   Notification[]
+  consents        Consent[]
+  payments        Payment[]
+  bookingsAsClient Booking[] @relation("ClientBookings")
+  reviewsWritten  Review[]   @relation("ReviewAuthor")
+  adminActions    AdminLog[]
+  verificationCodes VerificationCode[]
+
+  @@index([role, status])
+}
+
+model AuthSession {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  userAgent String?
+  ip        String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model VerificationCode {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel   String   // "email" | "sms"
+  target    String
+  code      String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([target, channel])
+}
+
+// ===== Согласия (Цифровой кодекс КР № 178) =====
+
+model Consent {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  version   String
+  givenAt   DateTime @default(now())
+  revokedAt DateTime?
+
+  @@index([userId, type])
+}
+
+// ===== Профили =====
+
+model ClientProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pseudonym String?
+  birthYear Int?
+  gender    String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// PsychVerificationStatus: DRAFT | PENDING | VERIFIED | REJECTED
+// SourceType: IN_HOUSE | EXTERNAL
+
+model PsychologistProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  source         String   @default("IN_HOUSE")
+  photoUrl       String?
+  bio            String?
+  approach       String?
+  experienceYears Int     @default(0)
+  pricePerSession Int     // в тыйынах (1 сом = 100 тыйынов)
+  currency       String   @default("KGS")
+  languages      String   @default("[]") // JSON
+  topics         String   @default("[]") // JSON
+  methods        String   @default("[]") // JSON
+  format         String   @default("[\"video\"]") // JSON
+  rating         Float    @default(0)
+  reviewsCount   Int      @default(0)
+  verification   String   @default("DRAFT")
+  verifiedBadge  Boolean  @default(false)
+  bufferMinutes  Int      @default(15)
+  sessionMinutes Int      @default(50)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  availability   AvailabilityRule[]
+  timeOff        TimeOff[]
+  bookings       Booking[]
+  materials      Material[]
+  courses        Course[]
+  reviews        Review[]
+  wallet         Wallet?
+  documents      PsychologistDocument[]
+  subscriptions  PsychSubscription[]
+
+  @@index([verification, source])
+  @@index([rating])
+}
+
+model PsychologistDocument {
+  id            String  @id @default(cuid())
+  psychologistId String
+  psychologist  PsychologistProfile @relation(fields: [psychologistId], references: [id], onDelete: Cascade)
+  kind          String
+  fileUrl       String
+  comment       String?
+  uploadedAt    DateTime @default(now())
+  reviewedAt    DateTime?
+  approved      Boolean?
+}
+
+// ===== Расписание =====
+
+model AvailabilityRule {
+  id             String  @id @default(cuid())
+  psychologistId String
+  psychologist   PsychologistProfile @relation(fields: [psychologistId], references: [id], onDelete: Cascade)
+  weekday        Int
+  startMinutes   Int
+  endMinutes     Int
+  createdAt      DateTime @default(now())
+
+  @@index([psychologistId, weekday])
+}
+
+model TimeOff {
+  id             String   @id @default(cuid())
+  psychologistId String
+  psychologist   PsychologistProfile @relation(fields: [psychologistId], references: [id], onDelete: Cascade)
+  startAt        DateTime
+  endAt          DateTime
+  reason         String?
+
+  @@index([psychologistId, startAt])
+}
+
+// ===== Бронирование и сессии =====
+// BookingStatus: PENDING_PAYMENT | CONFIRMED | COMPLETED | CANCELLED_BY_CLIENT | ...
+// BookingFormat: VIDEO | CHAT
+
+model Booking {
+  id             String   @id @default(cuid())
+  clientId       String
+  client         User     @relation("ClientBookings", fields: [clientId], references: [id])
+  psychologistId String
+  psychologist   PsychologistProfile @relation(fields: [psychologistId], references: [id])
+  startAt        DateTime
+  endAt          DateTime
+  format         String   @default("VIDEO")
+  status         String   @default("PENDING_PAYMENT")
+  pricePerSession Int
+  commissionPercent Int
+  packageId      String?
+  package        SessionPackage? @relation(fields: [packageId], references: [id])
+  payment        Payment?
+  session        Session?
+  review         Review?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  cancelReason   String?
+
+  @@index([psychologistId, startAt])
+  @@index([clientId, startAt])
+  @@index([status])
+}
+
+model SessionPackage {
+  id             String   @id @default(cuid())
+  clientId       String
+  psychologistId String
+  totalSessions  Int
+  usedSessions   Int      @default(0)
+  pricePaid      Int
+  status         String   @default("ACTIVE")
+  createdAt      DateTime @default(now())
+
+  bookings       Booking[]
+}
+
+model Session {
+  id          String   @id @default(cuid())
+  bookingId   String   @unique
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  roomName    String?
+  clientToken String?
+  psychologistToken String?
+  startedAt   DateTime?
+  endedAt     DateTime?
+  recordingAllowedByClient       Boolean @default(false)
+  recordingAllowedByPsychologist Boolean @default(false)
+  recordingUrl String?
+  notes       PsychologistNote?
+}
+
+model PsychologistNote {
+  id               String   @id @default(cuid())
+  sessionId        String   @unique
+  session          Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  psychologistId   String
+  clientId         String
+  encryptedContent String
+  iv               String
+  authTag          String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([psychologistId, clientId])
+}
+
+// ===== Платежи и кошелёк =====
+// PaymentStatus: CREATED | PAID | FAILED | REFUNDED | PARTIAL_REFUND
+// PaymentMethod: CARD | MBANK | ELKART | OMONEY | OTHER
+// PaymentPurpose: SESSION | PACKAGE | MATERIAL | COURSE | SUBSCRIPTION
+
+model Payment {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  purpose        String
+  bookingId      String?  @unique
+  booking        Booking? @relation(fields: [bookingId], references: [id])
+  materialId     String?
+  material       Material? @relation(fields: [materialId], references: [id])
+  courseId       String?
+  course         Course?  @relation(fields: [courseId], references: [id])
+  subscriptionId String?
+  subscription   PsychSubscription? @relation(fields: [subscriptionId], references: [id])
+
+  amount         Int
+  currency       String   @default("KGS")
+  method         String   @default("CARD")
+  status         String   @default("CREATED")
+  providerRef    String?
+  providerData   String?
+  splitToPsychologist Int?
+  commissionAmount Int?
+  refundAmount    Int?
+  createdAt      DateTime @default(now())
+  paidAt         DateTime?
+  refundedAt     DateTime?
+
+  @@index([userId, createdAt])
+  @@index([status])
+}
+
+model Wallet {
+  id             String  @id @default(cuid())
+  psychologistId String  @unique
+  psychologist   PsychologistProfile @relation(fields: [psychologistId], references: [id], onDelete: Cascade)
+  balance        Int     @default(0)
+  pendingBalance Int     @default(0)
+  currency       String  @default("KGS")
+
+  operations     WalletOperation[]
+  payouts        Payout[]
+}
+
+model WalletOperation {
+  id        String   @id @default(cuid())
+  walletId  String
+  wallet    Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  kind      String   // CREDIT | DEBIT | HOLD | RELEASE | PAYOUT | ADJUSTMENT
+  amount    Int
+  reason    String
+  refId     String?
+  createdAt DateTime @default(now())
+
+  @@index([walletId, createdAt])
+}
+
+// PayoutStatus: REQUESTED | PROCESSING | COMPLETED | REJECTED
+
+model Payout {
+  id        String   @id @default(cuid())
+  walletId  String
+  wallet    Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  amount    Int
+  status    String   @default("REQUESTED")
+  details   String?
+  processedAt DateTime?
+  createdAt DateTime @default(now())
+}
+
+// ===== Магазин: материалы и курсы =====
+// MaterialKind: ARTICLE | PDF | AUDIO | VIDEO | TEST | WORKBOOK
+
+model Material {
+  id             String   @id @default(cuid())
+  authorId       String
+  author         PsychologistProfile @relation(fields: [authorId], references: [id])
+  title          String
+  description    String?
+  kind           String
+  fileUrl        String?
+  contentBody    String?
+  coverUrl       String?
+  price          Int       @default(0)
+  currency       String    @default("KGS")
+  isPublished    Boolean   @default(false)
+  watermarkPdf   Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  purchases      MaterialPurchase[]
+  payments       Payment[]
+
+  @@index([isPublished, kind])
+}
+
+model MaterialPurchase {
+  id         String   @id @default(cuid())
+  materialId String
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  userId     String
+  acquiredAt DateTime @default(now())
+
+  @@unique([materialId, userId])
+}
+
+model Course {
+  id          String  @id @default(cuid())
+  authorId    String
+  author      PsychologistProfile @relation(fields: [authorId], references: [id])
+  title       String
+  description String?
+  coverUrl    String?
+  price       Int    @default(0)
+  currency    String @default("KGS")
+  isPublished Boolean @default(false)
+  certificateEnabled Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  modules     CourseModule[]
+  enrollments CourseEnrollment[]
+  payments    Payment[]
+}
+
+model CourseModule {
+  id        String @id @default(cuid())
+  courseId  String
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title     String
+  position  Int
+  lessons   CourseLesson[]
+}
+
+model CourseLesson {
+  id        String  @id @default(cuid())
+  moduleId  String
+  module    CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  title     String
+  body      String?
+  videoUrl  String?
+  position  Int
+
+  progress  CourseLessonProgress[]
+}
+
+model CourseEnrollment {
+  id        String  @id @default(cuid())
+  courseId  String
+  course    Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  userId    String
+  enrolledAt DateTime @default(now())
+  completedAt DateTime?
+
+  @@unique([courseId, userId])
+}
+
+model CourseLessonProgress {
+  id        String  @id @default(cuid())
+  lessonId  String
+  lesson    CourseLesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  userId    String
+  completedAt DateTime @default(now())
+
+  @@unique([lessonId, userId])
+}
+
+// ===== Подписка психологов (Фаза 3) =====
+
+model SubscriptionPlan {
+  id            String  @id @default(cuid())
+  name          String
+  monthlyPrice  Int
+  currency      String  @default("KGS")
+  commissionPercent Int
+  features      String  @default("[]") // JSON
+  isActive      Boolean @default(true)
+
+  subscriptions PsychSubscription[]
+}
+
+model PsychSubscription {
+  id             String   @id @default(cuid())
+  psychologistId String
+  psychologist   PsychologistProfile @relation(fields: [psychologistId], references: [id], onDelete: Cascade)
+  planId         String
+  plan           SubscriptionPlan @relation(fields: [planId], references: [id])
+  startAt        DateTime @default(now())
+  endAt          DateTime
+  status         String   @default("ACTIVE")
+  payments       Payment[]
+}
+
+// ===== Отзывы =====
+
+model Review {
+  id             String   @id @default(cuid())
+  bookingId      String   @unique
+  booking        Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  psychologistId String
+  psychologist   PsychologistProfile @relation(fields: [psychologistId], references: [id])
+  authorId       String
+  author         User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+  rating         Int
+  text           String?
+  isModerated    Boolean  @default(false)
+  isHidden       Boolean  @default(false)
+  moderatorNote  String?
+  createdAt      DateTime @default(now())
+
+  @@index([psychologistId, isHidden])
+}
+
+// ===== Уведомления =====
+// NotificationChannel: EMAIL | SMS | PUSH | INAPP
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel   String
+  template  String
+  title     String
+  body      String
+  payload   String?
+  readAt    DateTime?
+  sentAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+// ===== Промокоды =====
+
+model Promocode {
+  id            String  @id @default(cuid())
+  code          String  @unique
+  discountPercent Int?
+  discountAmount Int?
+  validFrom     DateTime?
+  validTo       DateTime?
+  maxUses       Int?
+  usesCount     Int     @default(0)
+  appliesTo     String  @default("SESSION")
+  isActive      Boolean @default(true)
+}
+
+// ===== Споры =====
+// DisputeStatus: OPEN | IN_REVIEW | RESOLVED_CLIENT | RESOLVED_PSYCHOLOGIST | CLOSED
+
+model Dispute {
+  id        String   @id @default(cuid())
+  bookingId String
+  reason    String
+  description String
+  status    String   @default("OPEN")
+  openedById String
+  resolverNote String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ===== Журнал админ-действий =====
+
+model AdminLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  actor     User     @relation(fields: [actorId], references: [id])
+  action    String
+  targetType String?
+  targetId   String?
+  diff       String?
+  createdAt DateTime @default(now())
+
+  @@index([actorId, createdAt])
+  @@index([targetType, targetId])
+}
+
+// ===== Системные настройки =====
+
+model SystemSetting {
+  key   String @id
+  value String
+}
