@@ -1,44 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 type Role = "CLIENT" | "PSYCHOLOGIST";
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [role, setRole] = useState<Role>("CLIENT");
-  const [displayName, setDisplayName] = useState("");
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    if (!consent) {
-      setError("Необходимо согласие на обработку персональных данных.");
-      return;
-    }
-    setLoading(true);
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ displayName, identifier, password, role }),
-    });
-    setLoading(false);
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error ?? "Не удалось зарегистрироваться");
-      return;
-    }
-    const next = role === "PSYCHOLOGIST" ? "/psychologist/onboarding" : "/me";
-    router.push(next);
-    router.refresh();
-  }
 
   return (
     <div className="mx-auto max-w-md px-4 py-12">
@@ -48,6 +16,10 @@ export default function RegisterPage() {
       </p>
 
       <div className="card mt-6">
+        <div className="rounded-md bg-brand-50 border border-brand-100 px-3 py-2 text-sm text-brand-700 mb-4">
+          Демо-версия. Регистрация недоступна — используйте навигацию для просмотра всех страниц.
+        </div>
+
         <div className="mb-4 grid grid-cols-2 gap-2">
           <button
             type="button"
@@ -73,45 +45,22 @@ export default function RegisterPage() {
           </button>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-4">
+        <div className="space-y-4">
           <div>
             <label className="label">Имя или псевдоним</label>
-            <input
-              className="input"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              required
-            />
+            <input className="input" />
           </div>
           <div>
             <label className="label">E-mail или телефон</label>
-            <input
-              className="input"
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="you@example.com или +996 700 123 456"
-              required
-            />
+            <input className="input" placeholder="you@example.com или +996 700 123 456" />
           </div>
           <div>
             <label className="label">Пароль</label>
-            <input
-              className="input"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              minLength={8}
-              required
-            />
+            <input className="input" type="password" />
             <p className="mt-1 text-xs text-slate-500">Минимум 8 символов.</p>
           </div>
           <label className="flex items-start gap-2 text-sm text-slate-700">
-            <input
-              type="checkbox"
-              checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
-              className="mt-1"
-            />
+            <input type="checkbox" className="mt-1" />
             <span>
               Я ознакомлен(а) с{" "}
               <Link href="/legal/terms" className="text-brand underline">офертой</Link>,{" "}
@@ -122,9 +71,8 @@ export default function RegisterPage() {
               кодексом КР.
             </span>
           </label>
-          {error && <div className="text-sm text-rose-600">{error}</div>}
-          <button className="btn-primary w-full" disabled={loading}>
-            {loading ? "Создаём аккаунт..." : "Создать аккаунт"}
+          <button className="btn-primary w-full opacity-60 cursor-not-allowed">
+            Создать аккаунт (демо)
           </button>
           <div className="text-sm text-slate-600">
             Уже есть аккаунт?{" "}
@@ -132,7 +80,7 @@ export default function RegisterPage() {
               Войти
             </Link>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

@@ -9,7 +9,10 @@ export default function ExportPage() {
         JSON-файл. Файл содержит профиль, бронирования, оплаты, покупки, отзывы
         и уведомления.
       </p>
-      <Link href="/api/me/export" className="btn-primary">Скачать JSON</Link>
+      <button className="btn-primary opacity-60 cursor-not-allowed">Скачать JSON (демо)</button>
+      <div className="mt-4">
+        <Link href="/me" className="text-brand text-sm">← Назад в кабинет</Link>
+      </div>
     </div>
   );
 }

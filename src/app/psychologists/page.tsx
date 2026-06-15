@@ -1,30 +1,11 @@
 import Link from "next/link";
-import { searchPsychologists, TOPICS, METHODS, LANGUAGES, type CatalogFilters } from "@/lib/catalog";
+import { MOCK_PSYCHOLOGISTS } from "@/lib/mock-data";
 import { formatKGS } from "@/lib/money";
-import { ROLE_LABELS } from "@/lib/rbac";
+import { TOPICS, METHODS, LANGUAGES } from "@/lib/catalog-data";
 import { parseList } from "@/lib/json-list";
 
-type SearchParams = Record<string, string | undefined>;
-
-function parseFilters(sp: SearchParams): CatalogFilters {
-  return {
-    topic: sp.topic,
-    method: sp.method,
-    language: sp.language,
-    priceMax: sp.priceMax ? Number(sp.priceMax) : undefined,
-    format: sp.format === "chat" ? "chat" : sp.format === "video" ? "video" : undefined,
-    sort: (sp.sort as CatalogFilters["sort"]) ?? "rating",
-    q: sp.q,
-  };
-}
-
-export default async function PsychologistsPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
-  const filters = parseFilters(searchParams);
-  const { items, total } = await searchPsychologists(filters);
+export default function PsychologistsPage() {
+  const items = MOCK_PSYCHOLOGISTS;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 md:py-8">
@@ -34,7 +15,7 @@ export default async function PsychologistsPage({
             Каталог психологов
           </h1>
           <p className="text-sm text-slate-600">
-            Найдено: {total}. Все специалисты прошли верификацию документов.
+            Найдено: {items.length}. Все специалисты прошли верификацию документов.
           </p>
         </div>
         <Link href="/for-psychologists" className="btn-secondary hidden md:inline-flex">
@@ -42,19 +23,14 @@ export default async function PsychologistsPage({
         </Link>
       </div>
 
-      <form className="card mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5" method="get">
+      <div className="card mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <div className="sm:col-span-2 lg:col-span-2">
           <label className="label">Поиск</label>
-          <input
-            name="q"
-            defaultValue={filters.q}
-            className="input"
-            placeholder="Имя, метод, ключевое слово…"
-          />
+          <input className="input" placeholder="Имя, метод, ключевое слово…" />
         </div>
         <div>
           <label className="label">Тема</label>
-          <select name="topic" defaultValue={filters.topic ?? ""} className="input">
+          <select className="input">
             <option value="">Любая</option>
             {TOPICS.map((t) => (
               <option key={t.slug} value={t.slug}>{t.label}</option>
@@ -63,7 +39,7 @@ export default async function PsychologistsPage({
         </div>
         <div>
           <label className="label">Метод</label>
-          <select name="method" defaultValue={filters.method ?? ""} className="input">
+          <select className="input">
             <option value="">Любой</option>
             {METHODS.map((m) => (
               <option key={m.slug} value={m.slug}>{m.label}</option>
@@ -72,7 +48,7 @@ export default async function PsychologistsPage({
         </div>
         <div>
           <label className="label">Язык</label>
-          <select name="language" defaultValue={filters.language ?? ""} className="input">
+          <select className="input">
             <option value="">Любой</option>
             {LANGUAGES.map((l) => (
               <option key={l.code} value={l.code}>{l.label}</option>
@@ -81,19 +57,11 @@ export default async function PsychologistsPage({
         </div>
         <div>
           <label className="label">Цена до (сом)</label>
-          <input
-            name="priceMax"
-            type="number"
-            min={0}
-            step={100}
-            defaultValue={filters.priceMax ? Math.round(filters.priceMax / 100) : ""}
-            className="input"
-            placeholder="напр., 3000"
-          />
+          <input type="number" min={0} step={100} className="input" placeholder="напр., 3000" />
         </div>
         <div>
           <label className="label">Формат</label>
-          <select name="format" defaultValue={filters.format ?? ""} className="input">
+          <select className="input">
             <option value="">Любой</option>
             <option value="video">Видео</option>
             <option value="chat">Чат</option>
@@ -101,26 +69,16 @@ export default async function PsychologistsPage({
         </div>
         <div>
           <label className="label">Сортировка</label>
-          <select name="sort" defaultValue={filters.sort ?? "rating"} className="input">
+          <select className="input">
             <option value="rating">По рейтингу</option>
             <option value="price_asc">Сначала дешевле</option>
             <option value="price_desc">Сначала дороже</option>
             <option value="experience">По опыту</option>
           </select>
         </div>
-        <div className="sm:col-span-2 lg:col-span-5 flex flex-wrap justify-end gap-2">
-          <Link href="/psychologists" className="btn-secondary">Сбросить</Link>
-          <button className="btn-primary" type="submit">Применить</button>
-        </div>
-      </form>
+      </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.length === 0 && (
-          <div className="card sm:col-span-2 lg:col-span-3 text-sm text-slate-600">
-            Под выбранные фильтры пока никого не нашлось. Попробуйте смягчить
-            критерии.
-          </div>
-        )}
         {items.map((p) => (
           <Link
             key={p.id}
@@ -133,14 +91,14 @@ export default async function PsychologistsPage({
               </div>
               <div>
                 <div className="font-medium text-slate-800">{p.user.displayName}</div>
-                <div className="text-xs text-slate-500">{ROLE_LABELS.PSYCHOLOGIST}</div>
+                <div className="text-xs text-slate-500">Психолог</div>
               </div>
               {p.verifiedBadge && (
                 <span className="badge bg-brand-50 text-brand ml-auto">✓ Верифицирован</span>
               )}
             </div>
             <p className="mt-3 line-clamp-3 text-sm text-slate-600">
-              {p.bio || "Описание скоро появится."}
+              {p.bio}
             </p>
             <div className="mt-3 flex flex-wrap gap-1.5">
               {parseList(p.methods).slice(0, 3).map((m) => (

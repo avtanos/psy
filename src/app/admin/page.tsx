@@ -1,43 +1,27 @@
 import Link from "next/link";
-import { requireUserPage } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { MOCK_ADMIN_STATS } from "@/lib/mock-data";
 import { formatKGS } from "@/lib/money";
 
-export default async function AdminDashboard() {
-  await requireUserPage(["ADMIN", "CONTENT_MANAGER"]);
-
-  const [usersTotal, clients, psychologists, pendingVerifications, bookingsTotal, completedBookings] =
-    await Promise.all([
-      prisma.user.count(),
-      prisma.user.count({ where: { role: "CLIENT" } }),
-      prisma.user.count({ where: { role: "PSYCHOLOGIST" } }),
-      prisma.psychologistProfile.count({ where: { verification: "PENDING" } }),
-      prisma.booking.count(),
-      prisma.booking.count({ where: { status: "COMPLETED" } }),
-    ]);
-
-  const payments = await prisma.payment.aggregate({
-    where: { status: "PAID" },
-    _sum: { amount: true, commissionAmount: true, splitToPsychologist: true },
-  });
+export default function AdminDashboard() {
+  const s = MOCK_ADMIN_STATS;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-6 md:py-8 space-y-5 md:space-y-6">
       <h1 className="text-xl md:text-2xl font-semibold text-slate-800">Админ-панель</h1>
 
       <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
-        <Stat label="Пользователей" value={usersTotal} />
-        <Stat label="Клиентов" value={clients} />
-        <Stat label="Психологов" value={psychologists} />
-        <Stat label="Ждут верификации" value={pendingVerifications} highlight />
+        <Stat label="Пользователей" value={s.usersTotal} />
+        <Stat label="Клиентов" value={s.clients} />
+        <Stat label="Психологов" value={s.psychologists} />
+        <Stat label="Ждут верификации" value={s.pendingVerifications} highlight />
       </div>
 
       <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3">
-        <Stat label="Сессий всего" value={bookingsTotal} />
-        <Stat label="Завершённых" value={completedBookings} />
-        <Stat label="Оборот" value={formatKGS(payments._sum.amount ?? 0)} />
-        <Stat label="Комиссия платформы" value={formatKGS(payments._sum.commissionAmount ?? 0)} />
-        <Stat label="К выплате психологам" value={formatKGS(payments._sum.splitToPsychologist ?? 0)} />
+        <Stat label="Сессий всего" value={s.bookingsTotal} />
+        <Stat label="Завершённых" value={s.completedBookings} />
+        <Stat label="Оборот" value={formatKGS(s.totalRevenue)} />
+        <Stat label="Комиссия платформы" value={formatKGS(s.totalCommission)} />
+        <Stat label="К выплате психологам" value={formatKGS(s.totalPsychologistPayout)} />
       </div>
 
       <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3">

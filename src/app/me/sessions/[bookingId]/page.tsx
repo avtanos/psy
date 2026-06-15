@@ -1,32 +1,16 @@
-import { notFound, redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth";
-import { JoinRoom } from "@/components/join-room";
-import { RecordingConsent } from "@/components/recording-consent";
-import { PrivateNoteEditor } from "@/components/private-note-editor";
+import Link from "next/link";
+import { MOCK_BOOKINGS } from "@/lib/mock-data";
 
-export default async function SessionPage({
+export function generateStaticParams() {
+  return MOCK_BOOKINGS.map((b) => ({ bookingId: b.id }));
+}
+
+export default function SessionPage({
   params,
 }: {
   params: { bookingId: string };
 }) {
-  const user = await getCurrentUser();
-  if (!user) redirect(`/login?next=/me/sessions/${params.bookingId}`);
-
-  const booking = await prisma.booking.findUnique({
-    where: { id: params.bookingId },
-    include: {
-      psychologist: { include: { user: true } },
-      session: { include: { notes: true } },
-      client: { select: { id: true, displayName: true } },
-    },
-  });
-  if (!booking) notFound();
-
-  const isClient = booking.clientId === user.id;
-  const isPsych =
-    user.role === "PSYCHOLOGIST" && booking.psychologist.userId === user.id;
-  if (!isClient && !isPsych) redirect("/");
+  const booking = MOCK_BOOKINGS.find((b) => b.id === params.bookingId) ?? MOCK_BOOKINGS[0];
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-6 md:py-8 space-y-4 md:space-y-5">
@@ -34,10 +18,7 @@ export default async function SessionPage({
         <h1 className="text-lg md:text-xl font-semibold text-slate-800">Сессия</h1>
         <p className="text-sm text-slate-600">
           {new Date(booking.startAt).toLocaleString("ru-RU")} ·{" "}
-          {isClient
-            ? `Психолог: ${booking.psychologist.user.displayName}`
-            : `Клиент: ${booking.client.displayName}`}{" "}
-          · Статус: {booking.status}
+          Психолог: {booking.psychologistName} · Статус: {booking.status}
         </p>
       </div>
 
@@ -48,7 +29,9 @@ export default async function SessionPage({
           участникам сессии.
         </p>
         <div className="mt-3">
-          <JoinRoom bookingId={booking.id} />
+          <button className="btn-primary opacity-60 cursor-not-allowed">
+            Подключиться к видеокомнате (демо)
+          </button>
         </div>
       </div>
 
@@ -58,23 +41,19 @@ export default async function SessionPage({
           По умолчанию запись выключена. Включить запись можно только при
           согласии обеих сторон.
         </p>
-        <RecordingConsent
-          bookingId={booking.id}
-          isClient={isClient}
-          clientConsent={booking.session?.recordingAllowedByClient ?? false}
-          psychConsent={booking.session?.recordingAllowedByPsychologist ?? false}
-        />
+        <div className="mt-3 space-y-2">
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" disabled /> Я (клиент) даю согласие на запись
+          </label>
+          <label className="flex items-center gap-2 text-sm text-slate-400">
+            <input type="checkbox" disabled /> Психолог даёт согласие на запись
+          </label>
+        </div>
       </div>
 
-      {isPsych && (
-        <div className="card">
-          <h2 className="font-medium text-slate-800">Приватные заметки</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Заметки видны только вам. Содержимое шифруется на сервере (AES-256-GCM).
-          </p>
-          <PrivateNoteEditor bookingId={booking.id} hasNote={Boolean(booking.session?.notes)} />
-        </div>
-      )}
+      <div className="mt-4">
+        <Link href="/me" className="text-brand text-sm">← Назад в кабинет</Link>
+      </div>
     </div>
   );
 }

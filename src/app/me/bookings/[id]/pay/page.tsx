@@ -1,32 +1,27 @@
-import { notFound, redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth";
+import Link from "next/link";
+import { MOCK_BOOKINGS } from "@/lib/mock-data";
 import { formatKGS } from "@/lib/money";
-import { PayButton } from "@/components/pay-button";
 
-export default async function PayBookingPage({
+export function generateStaticParams() {
+  return MOCK_BOOKINGS.map((b) => ({ id: b.id }));
+}
+
+export default function PayBookingPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const user = await getCurrentUser();
-  if (!user) redirect(`/login?next=/me/bookings/${params.id}/pay`);
-
-  const booking = await prisma.booking.findUnique({
-    where: { id: params.id },
-    include: { psychologist: { include: { user: true } } },
-  });
-  if (!booking || booking.clientId !== user.id) notFound();
+  const booking = MOCK_BOOKINGS.find((b) => b.id === params.id) ?? MOCK_BOOKINGS[0];
 
   return (
     <div className="mx-auto max-w-lg px-4 py-10">
       <div className="card">
         <h1 className="text-xl font-semibold text-slate-800">Оплата сессии</h1>
         <div className="mt-3 text-sm text-slate-700">
-          <div>Психолог: <b>{booking.psychologist.user.displayName}</b></div>
+          <div>Психолог: <b>{booking.psychologistName}</b></div>
           <div>Дата: {new Date(booking.startAt).toLocaleString("ru-RU")}</div>
           <div className="mt-2 text-2xl font-bold text-slate-900">
-            {formatKGS(booking.pricePerSession)}
+            {formatKGS(booking.price)}
           </div>
         </div>
         <p className="mt-4 text-xs text-slate-500">
@@ -34,8 +29,13 @@ export default async function PayBookingPage({
           Платформа не хранит номера карт.
         </p>
         <div className="mt-4">
-          <PayButton bookingId={booking.id} />
+          <button className="btn-primary opacity-60 cursor-not-allowed w-full">
+            Оплатить (демо)
+          </button>
         </div>
+      </div>
+      <div className="mt-4">
+        <Link href="/me" className="text-brand text-sm">← Назад в кабинет</Link>
       </div>
     </div>
   );

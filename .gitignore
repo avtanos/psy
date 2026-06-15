@@ -26,5 +26,11 @@ Thumbs.db
 prisma/dev.db
 prisma/dev.db-journal
 
+# Build output (static export)
+out/
+
+# Backup files (disabled for static export)
+*.bak
+
 # Test coverage
 coverage/

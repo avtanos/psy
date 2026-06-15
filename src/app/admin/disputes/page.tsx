@@ -1,12 +1,8 @@
-import { requireUserPage } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+import { MOCK_DISPUTES } from "@/lib/mock-data";
 
-export default async function DisputesPage() {
-  await requireUserPage(["ADMIN"]);
-  const disputes = await prisma.dispute.findMany({
-    where: { status: { in: ["OPEN", "IN_REVIEW"] } },
-    orderBy: { createdAt: "asc" },
-  });
+export default function DisputesPage() {
+  const disputes = MOCK_DISPUTES;
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 space-y-4">
       <h1 className="text-2xl font-semibold text-slate-800">Споры</h1>
@@ -18,6 +14,7 @@ export default async function DisputesPage() {
           <p className="mt-2 whitespace-pre-line text-sm">{d.description}</p>
         </div>
       ))}
+      <Link href="/admin" className="text-brand text-sm">← Назад в админку</Link>
     </div>
   );
 }

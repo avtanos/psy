@@ -1,43 +1,26 @@
-import { notFound } from "next/navigation";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth";
+import { MOCK_COURSES } from "@/lib/mock-data";
 import { formatKGS } from "@/lib/money";
-import { PayButton } from "@/components/pay-button";
 
-export default async function CoursePage({ params }: { params: { id: string } }) {
-  const c = await prisma.course.findUnique({
-    where: { id: params.id },
-    include: {
-      author: { include: { user: { select: { displayName: true } } } },
-      modules: { orderBy: { position: "asc" }, include: { lessons: { orderBy: { position: "asc" } } } },
-    },
-  });
-  if (!c || !c.isPublished) notFound();
+export function generateStaticParams() {
+  return MOCK_COURSES.map((c) => ({ id: c.id }));
+}
 
-  const user = await getCurrentUser();
-  const enrolled =
-    user &&
-    Boolean(
-      await prisma.courseEnrollment.findUnique({
-        where: { courseId_userId: { courseId: c.id, userId: user.id } },
-      })
-    );
+export default function CoursePage({ params }: { params: { id: string } }) {
+  const c = MOCK_COURSES.find((x) => x.id === params.id) ?? MOCK_COURSES[0];
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <div className="card">
-        <div className="text-sm text-slate-500">{c.author.user.displayName}</div>
+        <div className="text-sm text-slate-500">{c.authorName}</div>
         <h1 className="text-2xl font-semibold text-slate-800">{c.title}</h1>
         <p className="mt-2 text-slate-700 whitespace-pre-line">{c.description}</p>
 
         <div className="mt-4 flex items-center justify-between">
           <div className="text-xl font-bold">{c.price === 0 ? "Бесплатно" : formatKGS(c.price)}</div>
-          {!enrolled && user && <PayButton courseId={c.id} label="Записаться на курс" />}
-          {!user && (
-            <Link href={`/login?next=/courses/${c.id}`} className="btn-primary">Войти для записи</Link>
-          )}
-          {enrolled && <span className="badge bg-brand-50 text-brand">Вы записаны</span>}
+          <span className="btn-primary opacity-60 cursor-not-allowed">
+            Записаться (демо)
+          </span>
         </div>
       </div>
 
@@ -56,13 +39,14 @@ export default async function CoursePage({ params }: { params: { id: string } })
               </ul>
             </li>
           ))}
-          {c.modules.length === 0 && (
-            <li className="text-sm text-slate-500">Содержимое курса будет добавлено.</li>
-          )}
         </ol>
         {c.certificateEnabled && (
           <p className="mt-3 text-xs text-slate-500">По завершении выдаётся сертификат.</p>
         )}
+      </div>
+
+      <div className="mt-4">
+        <Link href="/courses" className="text-brand text-sm">← Все курсы</Link>
       </div>
     </div>
   );

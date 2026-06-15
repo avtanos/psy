@@ -1,44 +1,8 @@
-import { requireUserPage } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+import { MOCK_PENDING_REVIEWS } from "@/lib/mock-data";
 
-async function moderate(formData: FormData) {
-  "use server";
-  const id = String(formData.get("id"));
-  const action = String(formData.get("action"));
-  const note = String(formData.get("note") ?? "");
-  await requireUserPage(["ADMIN", "CONTENT_MANAGER"]);
-  await prisma.review.update({
-    where: { id },
-    data: {
-      isModerated: true,
-      isHidden: action === "hide",
-      moderatorNote: note || null,
-    },
-  });
-
-  // пересчёт рейтинга
-  const review = await prisma.review.findUniqueOrThrow({ where: { id } });
-  const agg = await prisma.review.aggregate({
-    where: { psychologistId: review.psychologistId, isHidden: false, isModerated: true },
-    _avg: { rating: true },
-    _count: { _all: true },
-  });
-  await prisma.psychologistProfile.update({
-    where: { id: review.psychologistId },
-    data: { rating: agg._avg.rating ?? 0, reviewsCount: agg._count._all },
-  });
-}
-
-export default async function AdminReviewsPage() {
-  await requireUserPage(["ADMIN", "CONTENT_MANAGER"]);
-  const pending = await prisma.review.findMany({
-    where: { isModerated: false },
-    orderBy: { createdAt: "asc" },
-    include: {
-      psychologist: { include: { user: { select: { displayName: true } } } },
-      author: { select: { displayName: true } },
-    },
-  });
+export default function AdminReviewsPage() {
+  const pending = MOCK_PENDING_REVIEWS;
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 space-y-4">
@@ -47,19 +11,19 @@ export default async function AdminReviewsPage() {
       {pending.map((r) => (
         <div key={r.id} className="card">
           <div className="text-sm text-slate-600">
-            {r.author.displayName} → {r.psychologist.user.displayName} ·{" "}
+            {r.authorName} → {r.psychologistName} ·{" "}
             {"★".repeat(r.rating)}
             <span className="text-slate-300">{"★".repeat(5 - r.rating)}</span>
           </div>
           {r.text && <p className="mt-2 whitespace-pre-line">{r.text}</p>}
-          <form action={moderate} className="mt-3 flex flex-wrap gap-2">
-            <input type="hidden" name="id" value={r.id} />
-            <input name="note" className="input flex-1 min-w-[200px]" placeholder="Заметка модератора" />
-            <button name="action" value="publish" className="btn-primary">Опубликовать</button>
-            <button name="action" value="hide" className="btn-danger">Скрыть</button>
-          </form>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <input className="input flex-1 min-w-[200px]" placeholder="Заметка модератора" />
+            <button className="btn-primary opacity-60 cursor-not-allowed">Опубликовать (демо)</button>
+            <button className="btn-danger opacity-60 cursor-not-allowed">Скрыть (демо)</button>
+          </div>
         </div>
       ))}
+      <Link href="/admin" className="text-brand text-sm">← Назад в админку</Link>
     </div>
   );
 }

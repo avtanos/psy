@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { requireUserPage } from "@/lib/auth";
 
-export default async function OnboardingPage() {
-  await requireUserPage(["PSYCHOLOGIST"]);
+export default function OnboardingPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 space-y-5">
       <h1 className="text-2xl font-semibold text-slate-800">Добро пожаловать!</h1>

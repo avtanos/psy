@@ -1,25 +1,16 @@
-import { requireUserPage } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 import { formatKGS } from "@/lib/money";
 
-async function saveSetting(formData: FormData) {
-  "use server";
-  await requireUserPage(["ADMIN"]);
-  const key = String(formData.get("key"));
-  const value = String(formData.get("value"));
-  await prisma.systemSetting.upsert({
-    where: { key },
-    update: { value },
-    create: { key, value },
-  });
-}
-
-export default async function CommissionsPage() {
-  await requireUserPage(["ADMIN"]);
-  const settings = await prisma.systemSetting.findMany();
-  const map = Object.fromEntries(settings.map((s) => [s.key, s.value]));
-  const plans = await prisma.subscriptionPlan.findMany();
-  const promos = await prisma.promocode.findMany({ orderBy: { code: "asc" } });
+export default function CommissionsPage() {
+  const plans = [
+    { id: "sp-1", name: "Базовый", monthlyPrice: 0, commissionPercent: 20 },
+    { id: "sp-2", name: "Профессионал", monthlyPrice: 299900, commissionPercent: 12 },
+  ];
+  const promos = [
+    { id: "pc-1", code: "WELCOME2026", discountPercent: 15, discountAmount: null, usesCount: 28, maxUses: 100 },
+    { id: "pc-2", code: "FRIEND500", discountPercent: null, discountAmount: 50000, usesCount: 12, maxUses: 50 },
+    { id: "pc-3", code: "NEWYEAR", discountPercent: 20, discountAmount: null, usesCount: 0, maxUses: null },
+  ];
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 space-y-6">
@@ -27,27 +18,18 @@ export default async function CommissionsPage() {
 
       <div className="card">
         <h2 className="font-medium text-slate-800">Базовая комиссия платформы (%)</h2>
-        <form action={saveSetting} className="mt-2 flex gap-2 max-w-sm">
-          <input type="hidden" name="key" value="commission_percent" />
-          <input
-            name="value"
-            type="number"
-            min={0}
-            max={50}
-            defaultValue={map.commission_percent ?? process.env.DEFAULT_COMMISSION_PERCENT ?? 20}
-            className="input"
-          />
-          <button className="btn-primary">Сохранить</button>
-        </form>
+        <div className="mt-2 flex gap-2 max-w-sm">
+          <input type="number" min={0} max={50} defaultValue={20} className="input" readOnly />
+          <button className="btn-primary opacity-60 cursor-not-allowed">Сохранить (демо)</button>
+        </div>
       </div>
 
       <div className="card">
         <h2 className="font-medium text-slate-800">Подписки для психологов</h2>
-        {plans.length === 0 && <p className="mt-1 text-sm text-slate-600">Нет планов.</p>}
         <ul className="mt-2 space-y-1 text-sm">
           {plans.map((p) => (
             <li key={p.id}>
-              {p.name} — {formatKGS(p.monthlyPrice)} / мес · комиссия {p.commissionPercent}%
+              {p.name} — {p.monthlyPrice === 0 ? "Бесплатно" : formatKGS(p.monthlyPrice)} / мес · комиссия {p.commissionPercent}%
             </li>
           ))}
         </ul>
@@ -55,7 +37,6 @@ export default async function CommissionsPage() {
 
       <div className="card">
         <h2 className="font-medium text-slate-800">Промокоды</h2>
-        {promos.length === 0 && <p className="mt-1 text-sm text-slate-600">Промокодов нет.</p>}
         <ul className="mt-2 space-y-1 text-sm">
           {promos.map((p) => (
             <li key={p.id}>
@@ -66,6 +47,8 @@ export default async function CommissionsPage() {
           ))}
         </ul>
       </div>
+
+      <Link href="/admin" className="text-brand text-sm">← Назад в админку</Link>
     </div>
   );
 }
