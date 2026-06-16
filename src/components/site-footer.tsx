@@ -19,6 +19,14 @@ export function SiteFooter() {
             <p className="mt-4 text-sm text-slate-600 leading-relaxed whitespace-pre-line">
               {t("footer.tagline")}
             </p>
+            <div className="mt-4">
+              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("nav.demo")}</div>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <Link href="/me" className="rounded-full bg-mint-50 px-3 py-1 text-xs font-medium text-brand-700 hover:bg-mint-100">{t("nav.roleClient")}</Link>
+                <Link href="/psychologist" className="rounded-full bg-mint-50 px-3 py-1 text-xs font-medium text-brand-700 hover:bg-mint-100">{t("nav.rolePsych")}</Link>
+                <Link href="/admin" className="rounded-full bg-mint-50 px-3 py-1 text-xs font-medium text-brand-700 hover:bg-mint-100">{t("nav.roleAdmin")}</Link>
+              </div>
+            </div>
           </div>
 
           <div>

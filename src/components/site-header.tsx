@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { MobileMenu } from "./mobile-menu";
 import { LangSwitcher } from "./lang-switcher";
+import { DemoMenu } from "./demo-menu";
 import { useT } from "./lang-provider";
 import { LogoMark, IconCalendar } from "./icons";
 
@@ -33,6 +34,7 @@ export function SiteHeader() {
 
         <div className="hidden lg:flex items-center gap-2.5">
           <LangSwitcher tone="light" />
+          <DemoMenu />
           <Link href="/login" className="inline-flex items-center rounded-xl border border-brand-200 bg-white/70 hover:bg-white px-5 py-2 text-sm font-medium text-brand-700">
             {t("nav.login")}
           </Link>
