@@ -103,13 +103,17 @@ export default function Home() {
             {t("home.allTopics")} <IconArrowRight size={14} />
           </Link>
         </div>
-        <div className="mt-5 flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
+        <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
           {TOPICS.map((to) => (
-            <Link key={to.slug} href={`/psychologists?topic=${to.slug}`} className="topic-chip">
-              <span className="icon-circle h-8 w-8">
+            <Link
+              key={to.slug}
+              href={`/psychologists?topic=${to.slug}`}
+              className="topic-chip w-full !whitespace-normal !rounded-2xl text-left leading-tight"
+            >
+              <span className="icon-circle h-8 w-8 shrink-0">
                 <to.icon size={16} />
               </span>
-              {t(to.k)}
+              <span>{t(to.k)}</span>
             </Link>
           ))}
         </div>
