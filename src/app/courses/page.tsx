@@ -11,7 +11,7 @@ export default function CoursesPage() {
   const t = useT();
 
   return (
-    <div className="bg-[#FBFAF7]">
+    <div className="bg-cream-50">
       <section>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-8 pb-6">
           <div className="grid items-center gap-8 lg:grid-cols-2">

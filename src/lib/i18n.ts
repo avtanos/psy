@@ -73,6 +73,8 @@ const ky: Record<string, string> = {
 
   // Home
   "home.heroTitle": "Психологиялык жардам онлайн — сиздин жаныңызда",
+  "home.heroTitleA": "Психологиялык жардам онлайн —",
+  "home.heroTitleB": "сиздин жаныңызда",
   "home.heroSub": "Текшерилген психологду тандап алыңыз, ыңгайлуу убакытка жазылыңыз жана Кыргызстандын каалаган жеринен профессионалдык колдоо алыңыз.",
   "home.findPsy": "Психолог табуу",
   "home.howItWorks": "Бул кантип иштейт",
@@ -162,6 +164,9 @@ const ky: Record<string, string> = {
   "course.feat.structSub": "кадам-кадам программа",
   "course.feat.online": "Онлайн форматта",
   "course.feat.onlineSub": "ыңгайлуу убакта окуңуз",
+  "course.feat.safe": "Купуялык жана коопсуздук",
+  "course.feat.safeSub": "маалыматыңыз корголгон",
+  "course.quote": "Тынчсызданууну түшүнсө болот, аны менен иштесе болот жана аны азайтса болот.",
   "course.signUp": "Жазылуу",
   "course.program": "Курстун программасы",
   "course.module": "Модул",
@@ -268,6 +273,24 @@ const ky: Record<string, string> = {
   "broch.cm.s": "Пикирлерди модерациялоо, материалдарды жана курстарды текшерүү, мазмун жана коомчулук боюнча аналитика.",
   "broch.role": "Рол",
 
+  // Redesign additions
+  "home.iAmPsy": "Мен психолог",
+  "home.trustLine": "Купуялык жана коопсуз",
+  "home.allTopics": "Бардык темалар",
+  "home.seeAll": "Баарын көрүү",
+  "home.testimonial": "Жашоону жакшыртууга жардам берген кесипкөй колдоо.",
+  "home.stat1": "текшерилген психологдор",
+  "home.stat2": "ийгиликтүү сессиялар",
+  "home.stat3": "ыраазы кардарлар",
+  "catalog.reset": "Чыпкаларды тазалоо",
+  "catalog.show": "Көрсөтүү",
+  "common.online": "Онлайн",
+  "common.topRated": "Рейтинг боюнча №1",
+  "common.view": "Көрүнүш",
+  "course.signUpCourse": "Курска жазылуу",
+  "course.securePay": "Коопсуз төлөм жана дароо жеткиликтүүлүк",
+  "course.week": "жума",
+
   // Misc
   "lang.label": "Тил",
 };
@@ -333,6 +356,8 @@ const ru: Record<string, string> = {
   "trust.banner": "Все специалисты проходят проверку документов и интервью. Ваша безопасность и конфиденциальность — наш приоритет.",
 
   "home.heroTitle": "Психологическая помощь онлайн — рядом с вами",
+  "home.heroTitleA": "Психологическая помощь онлайн —",
+  "home.heroTitleB": "рядом с вами",
   "home.heroSub": "Подберите проверенного психолога, запишитесь на удобное время и получите профессиональную поддержку из любой точки Кыргызстана.",
   "home.findPsy": "Найти психолога",
   "home.howItWorks": "Как это работает",
@@ -416,6 +441,9 @@ const ru: Record<string, string> = {
   "course.feat.structSub": "пошаговая программа",
   "course.feat.online": "Онлайн-формат",
   "course.feat.onlineSub": "учитесь в удобное время",
+  "course.feat.safe": "Конфиденциально и безопасно",
+  "course.feat.safeSub": "ваши данные защищены",
+  "course.quote": "Тревогу можно понять, с ней можно работать, и её можно уменьшить.",
   "course.signUp": "Записаться",
   "course.program": "Программа курса",
   "course.module": "Модуль",
@@ -516,6 +544,24 @@ const ru: Record<string, string> = {
   "broch.cm.t": "Качество контента",
   "broch.cm.s": "Модерация отзывов, проверка материалов и курсов, аналитика по контенту и сообществу.",
   "broch.role": "Роль",
+
+  // Redesign additions
+  "home.iAmPsy": "Я психолог",
+  "home.trustLine": "Конфиденциально и безопасно",
+  "home.allTopics": "Все темы",
+  "home.seeAll": "Смотреть всех",
+  "home.testimonial": "Профессиональная поддержка, которая помогает жить лучше.",
+  "home.stat1": "проверенных психологов",
+  "home.stat2": "успешных сессий",
+  "home.stat3": "довольных клиентов",
+  "catalog.reset": "Сбросить фильтры",
+  "catalog.show": "Показать",
+  "common.online": "Онлайн",
+  "common.topRated": "№1 по рейтингу",
+  "common.view": "Вид",
+  "course.signUpCourse": "Записаться на курс",
+  "course.securePay": "Безопасная оплата и мгновенный доступ",
+  "course.week": "неделя",
 
   "lang.label": "Язык",
 };

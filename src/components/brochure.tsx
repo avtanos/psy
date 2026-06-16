@@ -28,7 +28,7 @@ export function BrochureLayout({
   const a = accents[accent];
 
   return (
-    <div className="bg-[#FBFAF7] py-8 print:py-0 print:bg-white">
+    <div className="bg-cream-50 py-8 print:py-0 print:bg-white">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 print:max-w-full print:px-0">
         <div className="flex items-center justify-between gap-4 mb-5 no-print">
           <nav className="flex items-center gap-1.5 text-sm text-slate-500">

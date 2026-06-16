@@ -21,10 +21,10 @@ const KIND_LABELS: Record<string, { icon: typeof IconDocument }> = {
 };
 
 const PREVIEW_BG: Record<string, string> = {
-  ARTICLE: "from-mint-100 via-mint-50 to-cream-100",
-  PDF: "from-cream-100 via-mint-50 to-cream-50",
-  AUDIO: "from-blue-50 via-mint-50 to-mint-100",
-  VIDEO: "from-amber-50 via-cream-100 to-mint-100",
+  ARTICLE: "from-cream-100 via-mint-50 to-cream-50",
+  PDF: "from-mint-100 via-cream-100 to-cream-50",
+  AUDIO: "from-mint-100 via-mint-50 to-cream-100",
+  VIDEO: "from-cream-200 via-cream-100 to-mint-50",
   TEST: "from-cream-50 via-mint-50 to-mint-100",
   WORKBOOK: "from-mint-100 via-mint-50 to-cream-100",
 };
@@ -65,7 +65,7 @@ export default function MaterialsPage() {
   ];
 
   return (
-    <div className="bg-[#FBFAF7]">
+    <div className="bg-cream-50">
       <section>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-8 pb-6">
           <div className="grid items-center gap-8 lg:grid-cols-2">
@@ -108,12 +108,17 @@ export default function MaterialsPage() {
             const KIcon = kindIcon;
             return (
               <Link key={m.id} href={`/materials/${m.id}`} className="group">
-                <article className="overflow-hidden rounded-2xl bg-white shadow-card transition-all hover:shadow-soft border border-slate-100">
+                <article className="overflow-hidden rounded-2xl bg-white shadow-card transition-all hover:shadow-soft border border-brand-100/50">
                   <div className="relative">
                     <MaterialPreview kind={m.kind} />
-                    <span className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-xs font-medium text-brand-700 shadow-sm">
+                    <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-xs font-medium text-brand-700 shadow-sm">
                       <KIcon size={12} /> {t(`materials.kind.${m.kind}`)}
                     </span>
+                    {m.kind === "VIDEO" && (
+                      <span className="absolute bottom-3 left-3 rounded-md bg-brand-700/85 px-1.5 py-0.5 text-[10px] font-medium text-white">
+                        30:12
+                      </span>
+                    )}
                   </div>
                   <div className="p-5">
                     <h3 className="font-semibold text-brand-700 line-clamp-2 group-hover:text-brand-600">{m.title}</h3>

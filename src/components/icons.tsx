@@ -259,3 +259,33 @@ export const IconSparkles = ({ className, size }: IconProps) => (
     <path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.5 5.5l2.8 2.8M15.7 15.7l2.8 2.8M5.5 18.5l2.8-2.8M15.7 8.3l2.8-2.8" />
   </svg>
 );
+
+export const IconRefresh = ({ className, size }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+    <path d="M21 4v5h-5" />
+  </svg>
+);
+
+export const IconQuote = ({ className, size }: IconProps) => (
+  <svg width={size ?? 20} height={size ?? 20} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
+    <path d="M7 7h4v4c0 3-1.6 5-4.4 5.6L6 15c1.4-.3 2-1 2-2H7a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Zm9 0h4v4c0 3-1.6 5-4.4 5.6L15 15c1.4-.3 2-1 2-2h-1a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z" />
+  </svg>
+);
+
+// Логотип-листок внутри марки
+export const LogoMark = ({ className = "", size = 40 }: { className?: string; size?: number }) => (
+  <span
+    className={"inline-flex items-center justify-center rounded-xl bg-brand-700 " + className}
+    style={{ width: size, height: size }}
+  >
+    <svg width={size * 0.55} height={size * 0.55} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M12 3c-1.2 4-4 6-4 10a4 4 0 0 0 8 0c0-4-2.8-6-4-10Z"
+        fill="#E4E9D6"
+      />
+      <path d="M12 8v9" stroke="#234C3C" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M12 12l2-1.6M12 14l-2-1.6" stroke="#234C3C" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  </span>
+);

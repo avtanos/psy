@@ -33,7 +33,7 @@ export function MaterialDetailClient({ material: m }: { material: Material }) {
   const Icon = KIND_ICONS[m.kind] ?? IconDocument;
 
   return (
-    <div className="bg-[#FBFAF7] py-8">
+    <div className="bg-cream-50 py-8">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <nav className="flex items-center gap-1.5 text-sm text-slate-500">
           <Link href="/" className="inline-flex items-center gap-1 hover:text-brand">

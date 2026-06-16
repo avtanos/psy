@@ -4,7 +4,7 @@
 
 :root {
   color-scheme: light;
-  --brand: #0D3941;
+  --brand: #234C3C;
 }
 
 html, body {
@@ -12,8 +12,7 @@ html, body {
 }
 
 body {
-  @apply bg-[#FBFAF7] text-slate-900 antialiased;
-  font-feature-settings: "ss01", "cv11";
+  @apply bg-cream-50 text-slate-900 antialiased;
 }
 
 .safe-bottom {
@@ -35,15 +34,11 @@ body {
 }
 
 .btn-secondary {
-  @apply btn border border-slate-200 bg-white text-brand hover:border-brand-200 hover:bg-brand-50;
+  @apply btn border border-brand-200 bg-white/80 text-brand hover:border-brand-300 hover:bg-white;
 }
 
 .btn-light {
-  @apply btn bg-white text-brand hover:bg-brand-50;
-}
-
-.btn-pill {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all;
+  @apply btn bg-white text-brand hover:bg-cream-50;
 }
 
 .btn-danger {
@@ -51,16 +46,16 @@ body {
 }
 
 .input {
-  @apply block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm
-         placeholder-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-100;
+  @apply block w-full rounded-xl border border-brand-100 bg-white px-4 py-2.5 text-sm
+         placeholder-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-mint-200;
 }
 
 .label {
-  @apply mb-1.5 block text-sm font-medium text-slate-700;
+  @apply mb-1.5 block text-sm font-medium text-slate-600;
 }
 
 .card {
-  @apply rounded-2xl border border-slate-100 bg-white p-6 shadow-card;
+  @apply rounded-2xl border border-brand-100/60 bg-white p-6 shadow-card;
 }
 
 .card-soft {
@@ -72,35 +67,42 @@ body {
 }
 
 .badge-verified {
-  @apply badge bg-mint-100 text-mint-700;
+  @apply badge bg-mint-100 text-brand-700;
 }
 
 .chip {
-  @apply inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700
-         hover:border-brand-200 hover:bg-brand-50 transition-colors;
+  @apply inline-flex items-center gap-2 rounded-full border border-brand-100 bg-white px-4 py-2 text-sm text-slate-700
+         hover:border-brand-300 hover:bg-mint-50 transition-colors;
 }
 
 .chip-active {
   @apply chip border-brand bg-brand text-white hover:bg-brand-600 hover:text-white hover:border-brand;
 }
 
+/* Display heading — серифный, premium-editorial */
 .h-display {
-  @apply text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-brand-700 leading-[1.05];
+  @apply font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-brand-700 leading-[1.04];
 }
 
 .h-section {
-  @apply text-2xl md:text-3xl font-bold text-brand-700;
+  @apply font-display text-2xl md:text-3xl font-semibold text-brand-700;
 }
 
 /* Icon circle */
 .icon-circle {
-  @apply inline-flex shrink-0 items-center justify-center rounded-full bg-mint-100 text-brand;
+  @apply inline-flex shrink-0 items-center justify-center rounded-full bg-mint-100 text-brand-700;
 }
 
-/* Topic card hover */
-.topic-card {
-  @apply flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-card transition-all
-         hover:border-mint-200 hover:shadow-soft;
+/* Topic chip */
+.topic-chip {
+  @apply inline-flex items-center gap-2.5 rounded-full border border-brand-100 bg-white px-4 py-2.5 text-sm font-medium
+         text-slate-700 shadow-card transition-all hover:border-mint-300 hover:shadow-soft whitespace-nowrap;
+}
+
+/* Avatar tile (square-rounded, как фото в референсах) */
+.avatar-tile {
+  @apply shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-mint-200 via-mint-100 to-cream-100
+         flex items-center justify-center font-display font-semibold text-brand-700 ring-1 ring-brand-100;
 }
 
 /* Print: brochures */

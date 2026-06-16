@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useT } from "./lang-provider";
+import { LogoMark } from "./icons";
 
 export function SiteFooter() {
   const t = useT();
@@ -12,9 +13,7 @@ export function SiteFooter() {
         <div className="grid gap-10 lg:grid-cols-5">
           <div className="lg:col-span-1">
             <div className="flex items-center gap-2.5">
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-700 text-mint-100 text-xl font-semibold">
-                Ψ
-              </span>
+              <LogoMark size={40} />
               <span className="text-lg font-semibold tracking-tight text-brand-700">PsychKG</span>
             </div>
             <p className="mt-4 text-sm text-slate-600 leading-relaxed whitespace-pre-line">

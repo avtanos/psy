@@ -1,176 +1,192 @@
+// Акварельная сцена «арочное окно + интерьер» в духе референсов.
+// Всё векторное, без внешних изображений (работает в статическом экспорте).
+
 export function HeroIllustration({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 600 520" className={className} xmlns="http://www.w3.org/2000/svg" aria-hidden>
+    <svg viewBox="0 0 640 500" className={className} xmlns="http://www.w3.org/2000/svg" aria-hidden>
       <defs>
-        <radialGradient id="bg" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#FAF4E8" />
-          <stop offset="60%" stopColor="#F1F0E2" />
-          <stop offset="100%" stopColor="#E8E5D1" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="m1" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#A8B8B4" />
-          <stop offset="1" stopColor="#7A8E89" />
+        <linearGradient id="wall" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#F3ECDD" />
+          <stop offset="1" stopColor="#EAE0CB" />
         </linearGradient>
-        <linearGradient id="m2" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#849C95" />
-          <stop offset="1" stopColor="#5C7470" />
+        <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#EAF1F2" />
+          <stop offset="1" stopColor="#F4F1E6" />
         </linearGradient>
-        <linearGradient id="m3" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#B5C6B9" />
-          <stop offset="1" stopColor="#8DA792" />
+        <linearGradient id="mtnFar" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#BFCBC9" />
+          <stop offset="1" stopColor="#9DB0AE" />
         </linearGradient>
-        <linearGradient id="chair" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#8FA68E" />
-          <stop offset="1" stopColor="#6B8268" />
+        <linearGradient id="mtnMid" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#9FB6A6" />
+          <stop offset="1" stopColor="#7C9885" />
+        </linearGradient>
+        <linearGradient id="hill" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#8CAE8F" />
+          <stop offset="1" stopColor="#5E8067" />
         </linearGradient>
         <linearGradient id="leaf" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0" stopColor="#7BA68A" />
-          <stop offset="1" stopColor="#4F7A5E" />
+          <stop offset="0" stopColor="#7FA083" />
+          <stop offset="1" stopColor="#4F7458" />
         </linearGradient>
-        <clipPath id="circle">
-          <circle cx="300" cy="240" r="240" />
+        <clipPath id="arch">
+          <path d="M150 250 V120 a170 170 0 0 1 340 0 V250 a14 14 0 0 1 -14 14 H164 a14 14 0 0 1 -14 -14 Z" />
         </clipPath>
       </defs>
 
-      {/* Soft circular background */}
-      <circle cx="300" cy="240" r="240" fill="url(#bg)" />
+      {/* Стена */}
+      <rect x="0" y="0" width="640" height="500" fill="url(#wall)" />
 
-      <g clipPath="url(#circle)">
-        {/* Sky shimmer */}
-        <ellipse cx="200" cy="120" rx="180" ry="50" fill="#FFFFFF" opacity="0.4" />
+      {/* Арочное окно */}
+      <path
+        d="M150 250 V120 a170 170 0 0 1 340 0 V250 a14 14 0 0 1 -14 14 H164 a14 14 0 0 1 -14 -14 Z"
+        fill="url(#sky)"
+      />
+      <g clipPath="url(#arch)">
+        {/* Туманное небо */}
+        <rect x="150" y="-40" width="340" height="200" fill="#EAF1F2" />
+        <ellipse cx="280" cy="60" rx="150" ry="40" fill="#FFFFFF" opacity="0.55" />
 
-        {/* Far mountain */}
-        <path d="M-20 280 L70 180 L130 230 L220 130 L290 200 L360 140 L450 230 L530 170 L620 270 L620 320 L-20 320 Z" fill="url(#m1)" opacity="0.7" />
-        {/* Mid mountain */}
-        <path d="M-20 320 L60 240 L150 290 L240 200 L320 260 L420 200 L520 280 L620 240 L620 360 L-20 360 Z" fill="url(#m2)" opacity="0.8" />
-        {/* Near hills */}
-        <path d="M-20 380 L80 320 L200 360 L320 300 L450 370 L620 320 L620 480 L-20 480 Z" fill="url(#m3)" />
+        {/* Дальние горы со снегом */}
+        <path d="M120 175 L200 70 L250 120 L320 40 L380 110 L450 55 L520 140 L520 200 L120 200 Z" fill="url(#mtnFar)" opacity="0.85" />
+        <path d="M312 52 l8 -14 l8 14 l-4 7 l-8 -2 z" fill="#FFFFFF" opacity="0.9" />
+        <path d="M444 66 l6 -12 l6 12 l-3 6 l-6 -2 z" fill="#FFFFFF" opacity="0.85" />
 
-        {/* Snow caps */}
-        <path d="M210 145 l10 -15 l10 15 l-5 8 l-10 -3 z" fill="#FFFFFF" opacity="0.9" />
-        <path d="M350 155 l8 -15 l8 15 l-4 7 l-8 -2 z" fill="#FFFFFF" opacity="0.9" />
+        {/* Средние горы */}
+        <path d="M120 200 L190 130 L270 185 L350 120 L430 180 L510 130 L520 215 L120 215 Z" fill="url(#mtnMid)" opacity="0.9" />
 
-        {/* Ground line / shadow */}
-        <ellipse cx="350" cy="455" rx="200" ry="14" fill="#1F4030" opacity="0.08" />
+        {/* Хвойные холмы */}
+        <path d="M120 230 L200 165 L300 215 L400 160 L500 215 L520 200 L520 270 L120 270 Z" fill="url(#hill)" />
+        {/* Ёлочки-силуэты */}
+        {[170, 210, 250, 360, 410, 460].map((x, i) => (
+          <path key={i} d={`M${x} 215 l8 16 l-16 0 z M${x} 224 l9 16 l-18 0 z`} fill="#4F7458" opacity="0.55" />
+        ))}
 
-        {/* Side table */}
-        <rect x="200" y="385" width="80" height="48" rx="4" fill="#D8C3A5" />
-        <rect x="208" y="433" width="6" height="32" fill="#B59E7E" />
-        <rect x="266" y="433" width="6" height="32" fill="#B59E7E" />
+        {/* Озеро */}
+        <ellipse cx="320" cy="250" rx="150" ry="22" fill="#CFE0DB" opacity="0.7" />
+        <ellipse cx="320" cy="250" rx="110" ry="12" fill="#E7F0EC" opacity="0.6" />
+      </g>
+      {/* Рама окна */}
+      <path
+        d="M150 250 V120 a170 170 0 0 1 340 0 V250 a14 14 0 0 1 -14 14 H164 a14 14 0 0 1 -14 -14 Z"
+        fill="none"
+        stroke="#D8CBB0"
+        strokeWidth="6"
+      />
 
-        {/* Mug */}
-        <ellipse cx="240" cy="378" rx="15" ry="4" fill="#E8E3D8" />
-        <path d="M225 378 v-22 a15 4 0 0 0 30 0 v22 z" fill="#E8E3D8" />
-        <path d="M255 365 q12 0 12 8 q0 7 -12 7" fill="none" stroke="#E8E3D8" strokeWidth="3" />
+      {/* Подоконник */}
+      <rect x="138" y="262" width="364" height="12" rx="4" fill="#E7DAC0" />
 
-        {/* Small plant on table */}
-        <ellipse cx="223" cy="378" rx="8" ry="2.5" fill="#9B7F5C" />
-        <path d="M220 376 q-6 -16 -2 -28" stroke="#7BA68A" strokeWidth="2.5" fill="none" />
-        <path d="M223 376 q0 -18 4 -30" stroke="#578E6B" strokeWidth="2.5" fill="none" />
-        <path d="M226 376 q6 -14 4 -26" stroke="#7BA68A" strokeWidth="2.5" fill="none" />
-        <ellipse cx="218" cy="350" rx="5" ry="8" fill="#7BA68A" transform="rotate(-20 218 350)" />
-        <ellipse cx="227" cy="345" rx="5" ry="9" fill="#578E6B" />
-        <ellipse cx="232" cy="352" rx="4" ry="7" fill="#7BA68A" transform="rotate(20 232 352)" />
-
-        {/* Armchair */}
-        <path d="M310 470 L310 400 Q310 360 350 360 L420 360 Q460 360 460 400 L460 470 Z" fill="url(#chair)" />
-        {/* Back cushion */}
-        <ellipse cx="385" cy="385" rx="50" ry="22" fill="#A4BAA1" />
-        {/* Seat cushion */}
-        <rect x="320" y="420" width="130" height="40" rx="14" fill="#B8CDB1" />
-        {/* Throw pillow */}
-        <rect x="335" y="395" width="38" height="36" rx="10" fill="#EFE6D4" transform="rotate(-8 354 413)" />
-        {/* Arms */}
-        <rect x="300" y="400" width="20" height="70" rx="10" fill="#6B8268" />
-        <rect x="450" y="400" width="20" height="70" rx="10" fill="#6B8268" />
-        {/* Legs */}
-        <rect x="312" y="468" width="8" height="20" fill="#3D5040" />
-        <rect x="450" y="468" width="8" height="20" fill="#3D5040" />
-
-        {/* Big plant - pot */}
-        <path d="M490 450 L510 470 L555 470 L575 450 Z" fill="#CFA67E" />
-        <ellipse cx="532" cy="450" rx="42" ry="5" fill="#B58D63" />
-        {/* Stems */}
-        <path d="M520 450 q-10 -50 0 -110" stroke="#4F7A5E" strokeWidth="3" fill="none" />
-        <path d="M530 450 q5 -60 -5 -130" stroke="#578E6B" strokeWidth="3" fill="none" />
-        <path d="M540 450 q15 -50 5 -120" stroke="#4F7A5E" strokeWidth="3" fill="none" />
-        <path d="M548 450 q20 -40 25 -80" stroke="#7BA68A" strokeWidth="3" fill="none" />
-        {/* Leaves */}
-        <ellipse cx="515" cy="340" rx="18" ry="42" fill="url(#leaf)" transform="rotate(-25 515 340)" />
-        <ellipse cx="528" cy="310" rx="16" ry="38" fill="#578E6B" transform="rotate(-5 528 310)" />
-        <ellipse cx="545" cy="335" rx="15" ry="40" fill="url(#leaf)" transform="rotate(20 545 335)" />
-        <ellipse cx="560" cy="370" rx="14" ry="34" fill="#7BA68A" transform="rotate(35 560 370)" />
-        <ellipse cx="500" cy="380" rx="12" ry="30" fill="#578E6B" transform="rotate(-40 500 380)" />
-        <ellipse cx="572" cy="310" rx="11" ry="28" fill="#7BA68A" transform="rotate(45 572 310)" />
+      {/* Кресло */}
+      <g>
+        {/* Тень */}
+        <ellipse cx="360" cy="452" rx="150" ry="16" fill="#7C6F50" opacity="0.12" />
+        {/* Спинка */}
+        <path d="M300 440 V340 q0 -42 46 -42 h60 q46 0 46 42 V440 Z" fill="#D9D0BC" />
+        <ellipse cx="376" cy="330" rx="56" ry="24" fill="#C9C2AC" />
+        {/* Подлокотники */}
+        <rect x="288" y="350" width="26" height="92" rx="13" fill="#CFC6B0" />
+        <rect x="438" y="350" width="26" height="92" rx="13" fill="#CFC6B0" />
+        {/* Сиденье */}
+        <rect x="306" y="396" width="140" height="46" rx="16" fill="#E2DAC6" />
+        {/* Декоративная подушка */}
+        <rect x="320" y="356" width="44" height="40" rx="12" fill="#7E9A7C" transform="rotate(-8 342 376)" />
+        {/* Плед */}
+        <path d="M430 360 q26 6 24 50 l-20 -4 q-2 -30 -16 -38 z" fill="#7E9A7C" opacity="0.85" />
+        {/* Ножки */}
+        <rect x="312" y="440" width="8" height="20" rx="2" fill="#9A8C6A" />
+        <rect x="432" y="440" width="8" height="20" rx="2" fill="#9A8C6A" />
       </g>
 
-      {/* Soft fronds in foreground */}
-      <ellipse cx="100" cy="440" rx="80" ry="20" fill="#7BA68A" opacity="0.3" />
-      <ellipse cx="80" cy="460" rx="60" ry="14" fill="#578E6B" opacity="0.3" />
+      {/* Столик + кружка + книги */}
+      <g>
+        <rect x="196" y="376" width="78" height="10" rx="4" fill="#C9A87A" />
+        <rect x="204" y="386" width="6" height="64" fill="#B5946A" />
+        <rect x="260" y="386" width="6" height="64" fill="#B5946A" />
+        {/* Книги */}
+        <rect x="206" y="366" width="48" height="8" rx="2" fill="#5E8067" />
+        <rect x="210" y="358" width="42" height="8" rx="2" fill="#C7B68C" />
+        {/* Кружка */}
+        <path d="M236 376 v-16 a13 4 0 0 0 26 0 v16 z" fill="#EFE7D4" />
+        <ellipse cx="249" cy="360" rx="13" ry="3.5" fill="#DFD6BE" />
+        <path d="M262 364 q11 0 11 7 q0 7 -11 7" fill="none" stroke="#EFE7D4" strokeWidth="3" />
+      </g>
+
+      {/* Большое растение справа */}
+      <g>
+        <path d="M520 452 L536 470 L578 470 L594 452 Z" fill="#CDA878" />
+        <ellipse cx="557" cy="452" rx="40" ry="5" fill="#B5946A" />
+        <path d="M545 452 q-10 -56 0 -120" stroke="#4F7458" strokeWidth="3" fill="none" />
+        <path d="M556 452 q6 -64 -4 -140" stroke="#5E8067" strokeWidth="3" fill="none" />
+        <path d="M566 452 q16 -54 6 -128" stroke="#4F7458" strokeWidth="3" fill="none" />
+        <ellipse cx="540" cy="338" rx="17" ry="44" fill="url(#leaf)" transform="rotate(-24 540 338)" />
+        <ellipse cx="554" cy="304" rx="15" ry="40" fill="#5E8067" transform="rotate(-4 554 304)" />
+        <ellipse cx="572" cy="332" rx="14" ry="40" fill="url(#leaf)" transform="rotate(22 572 332)" />
+        <ellipse cx="586" cy="368" rx="13" ry="32" fill="#7FA083" transform="rotate(36 586 368)" />
+        <ellipse cx="528" cy="372" rx="12" ry="30" fill="#5E8067" transform="rotate(-40 528 372)" />
+      </g>
+
+      {/* Рамка-картина на стене слева */}
+      <rect x="78" y="150" width="56" height="74" rx="4" fill="#FBF7EE" stroke="#D8CBB0" strokeWidth="3" />
+      <path d="M86 210 q14 -28 26 -10 q6 9 14 4 v12 H86 Z" fill="#9FB6A6" opacity="0.7" />
+      <circle cx="98" cy="170" r="6" fill="#D9C9A0" opacity="0.8" />
     </svg>
   );
 }
 
 export function BooksIllustration({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 600 520" className={className} xmlns="http://www.w3.org/2000/svg" aria-hidden>
+    <svg viewBox="0 0 640 500" className={className} xmlns="http://www.w3.org/2000/svg" aria-hidden>
       <defs>
-        <radialGradient id="bg2" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#FAF4E8" />
-          <stop offset="60%" stopColor="#F1F0E2" />
-          <stop offset="100%" stopColor="#E8E5D1" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="b1" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#A8B8B4" />
-          <stop offset="1" stopColor="#7A8E89" />
+        <linearGradient id="wall2" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#F3ECDD" />
+          <stop offset="1" stopColor="#EAE0CB" />
         </linearGradient>
-        <linearGradient id="b2" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#849C95" />
-          <stop offset="1" stopColor="#5C7470" />
+        <linearGradient id="leaf2" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stopColor="#7FA083" />
+          <stop offset="1" stopColor="#4F7458" />
         </linearGradient>
-        <clipPath id="circle2">
-          <circle cx="300" cy="240" r="240" />
-        </clipPath>
       </defs>
 
-      <circle cx="300" cy="240" r="240" fill="url(#bg2)" />
+      <rect x="0" y="0" width="640" height="500" fill="url(#wall2)" />
 
-      <g clipPath="url(#circle2)">
-        <path d="M-20 280 L80 180 L160 230 L260 140 L340 210 L440 150 L540 240 L620 200 L620 320 L-20 320 Z" fill="url(#b1)" opacity="0.7" />
-        <path d="M-20 320 L60 250 L160 300 L260 230 L360 280 L460 220 L560 290 L620 260 L620 380 L-20 380 Z" fill="url(#b2)" opacity="0.8" />
+      {/* Полка */}
+      <rect x="80" y="350" width="480" height="14" rx="3" fill="#D8C39C" />
+      <rect x="80" y="364" width="480" height="6" fill="#C2AC82" opacity="0.6" />
 
-        {/* Surface */}
-        <rect x="-20" y="395" width="640" height="120" fill="#EBE2CB" />
-        <line x1="-20" y1="395" x2="620" y2="395" stroke="#C9BB9C" strokeWidth="2" />
+      {/* Картина-рамка */}
+      <rect x="430" y="150" width="120" height="150" rx="6" fill="#FBF7EE" stroke="#D8CBB0" strokeWidth="5" />
+      <path d="M448 280 q24 -54 46 -22 q12 16 24 6 v16 H448 Z" fill="#9FB6A6" opacity="0.7" />
+      <path d="M470 286 q10 -40 24 -20" stroke="#5E8067" strokeWidth="3" fill="none" />
 
-        {/* Stack of books */}
-        <rect x="220" y="280" width="180" height="34" rx="3" fill="#4F7A5E" />
-        <rect x="225" y="285" width="170" height="2" fill="#FFFFFF" opacity="0.4" />
-        <rect x="210" y="314" width="190" height="38" rx="3" fill="#D8C9A5" />
-        <rect x="215" y="319" width="180" height="2" fill="#A88A60" />
-        <rect x="230" y="352" width="170" height="32" rx="3" fill="#7BA68A" />
-        <rect x="235" y="357" width="160" height="2" fill="#FFFFFF" opacity="0.4" />
-        <rect x="200" y="384" width="200" height="12" rx="2" fill="#C9A77A" />
+      {/* Стопка книг */}
+      <rect x="150" y="300" width="150" height="20" rx="3" fill="#4F7458" />
+      <rect x="158" y="305" width="134" height="2" fill="#FFFFFF" opacity="0.4" />
+      <rect x="140" y="320" width="166" height="22" rx="3" fill="#D6C79E" />
+      <rect x="148" y="325" width="150" height="2" fill="#B49A6A" />
+      <rect x="160" y="342" width="146" height="8" rx="2" fill="#C9A87A" />
+      {/* Стоящая книга */}
+      <rect x="320" y="298" width="26" height="52" rx="2" fill="#5E8067" />
+      <rect x="324" y="303" width="3" height="42" fill="#FFFFFF" opacity="0.5" />
 
-        {/* Single standing book */}
-        <rect x="420" y="300" width="30" height="95" rx="2" fill="#5C7470" />
-        <rect x="425" y="305" width="3" height="80" fill="#FFFFFF" opacity="0.5" />
+      {/* Кружка */}
+      <ellipse cx="400" cy="350" rx="30" ry="5" fill="#C2AC82" />
+      <path d="M372 350 v-26 a28 5 0 0 0 56 0 v26 z" fill="#EFE7D4" />
+      <ellipse cx="400" cy="324" rx="28" ry="5" fill="#DFD6BE" />
+      <path d="M428 330 q13 0 13 9 q0 9 -13 9" fill="none" stroke="#EFE7D4" strokeWidth="4" />
 
-        {/* Cup */}
-        <ellipse cx="490" cy="395" rx="34" ry="6" fill="#C9BB9C" />
-        <path d="M460 395 v-28 a30 6 0 0 0 60 0 v28 z" fill="#EFE6D4" />
-        <ellipse cx="490" cy="368" rx="28" ry="5" fill="#D6CCB8" />
-        <path d="M520 376 q14 0 14 9 q0 9 -14 9" stroke="#EFE6D4" strokeWidth="4" fill="none" />
+      {/* Свеча */}
+      <rect x="360" y="320" width="20" height="30" rx="3" fill="#E9DFC8" />
+      <ellipse cx="370" cy="320" rx="10" ry="3" fill="#D8CCAE" />
+      <path d="M370 316 q3 -6 0 -10 q-3 4 0 10Z" fill="#E8B26A" />
 
-        {/* Plant in pot */}
-        <path d="M130 395 L142 415 L178 415 L190 395 Z" fill="#CFA67E" />
-        <path d="M150 395 q-8 -40 0 -80" stroke="#578E6B" strokeWidth="2.5" fill="none" />
-        <path d="M160 395 q4 -50 -2 -90" stroke="#4F7A5E" strokeWidth="2.5" fill="none" />
-        <path d="M168 395 q12 -40 6 -75" stroke="#7BA68A" strokeWidth="2.5" fill="none" />
-        <ellipse cx="148" cy="335" rx="10" ry="22" fill="#7BA68A" transform="rotate(-20 148 335)" />
-        <ellipse cx="158" cy="315" rx="9" ry="22" fill="#578E6B" />
-        <ellipse cx="172" cy="335" rx="9" ry="22" fill="#7BA68A" transform="rotate(20 172 335)" />
-      </g>
+      {/* Растение в вазе */}
+      <path d="M468 350 v-26 a18 4 0 0 0 36 0 v26 z" fill="#D8CFB8" />
+      <path d="M480 324 q-8 -44 0 -78" stroke="#5E8067" strokeWidth="2.5" fill="none" />
+      <path d="M490 324 q4 -50 -2 -86" stroke="#4F7458" strokeWidth="2.5" fill="none" />
+      <ellipse cx="478" cy="256" rx="11" ry="26" fill="url(#leaf2)" transform="rotate(-20 478 256)" />
+      <ellipse cx="490" cy="240" rx="10" ry="24" fill="#5E8067" />
+      <ellipse cx="500" cy="262" rx="9" ry="22" fill="#7FA083" transform="rotate(22 500 262)" />
     </svg>
   );
 }
