@@ -5,7 +5,7 @@ import { MOCK_PSYCHOLOGISTS } from "@/lib/mock-data";
 import { formatKGS } from "@/lib/money";
 import { TOPICS, METHODS, LANGUAGES } from "@/lib/catalog-data";
 import { parseList } from "@/lib/json-list";
-import { HeroIllustration } from "@/components/hero-illustration";
+import { Banner } from "@/components/banner";
 import { useT } from "@/components/lang-provider";
 import {
   IconShield, IconSearch, IconStar, IconCheck, IconGrid, IconList,
@@ -53,20 +53,13 @@ export default function PsychologistsPage() {
       </div>
 
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-10 pb-6">
-          <div className="grid items-center gap-8 lg:grid-cols-2">
-            <div>
-              <h1 className="h-display">{t("catalog.title")}</h1>
-              <p className="mt-4 text-base md:text-lg text-slate-600 leading-relaxed max-w-xl">
-                {t("catalog.sub")}
-              </p>
-            </div>
-            <div className="hidden lg:block relative h-full">
-              <HeroIllustration className="w-full max-w-lg ml-auto" />
-            </div>
-          </div>
-        </div>
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 pt-6 pb-6">
+        <Banner
+          src="/banners/hero-catalog.jpg"
+          imgHeight="md:h-[360px]"
+          title={t("catalog.title")}
+          subtitle={t("catalog.sub")}
+        />
       </section>
 
       {/* Filters */}

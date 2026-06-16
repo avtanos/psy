@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { HeroIllustration } from "@/components/hero-illustration";
+import { Banner } from "@/components/banner";
 import { MOCK_PSYCHOLOGISTS } from "@/lib/mock-data";
 import { formatKGS } from "@/lib/money";
 import { parseList } from "@/lib/json-list";
@@ -49,39 +49,34 @@ export default function Home() {
   return (
     <div className="bg-cream-50">
       {/* HERO */}
-      <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-10 md:pt-14 pb-0">
-          <div className="grid items-center gap-6 lg:grid-cols-2">
-            <div className="max-w-xl pb-10 md:pb-16">
-              <h1 className="h-display">
-                {t("home.heroTitleA")}{" "}
-                <span className="italic font-normal text-brand-600">{t("home.heroTitleB")}</span>
-              </h1>
-              <p className="mt-5 text-base md:text-lg text-slate-600 leading-relaxed">{t("home.heroSub")}</p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link href="/psychologists" className="btn-primary">
-                  {t("home.findPsy")}
-                  <IconChevronRight size={16} />
-                </Link>
-                <Link href="/for-psychologists" className="btn-secondary">
-                  <IconUser size={16} />
-                  {t("home.iAmPsy")}
-                </Link>
-              </div>
-              <div className="mt-6 inline-flex items-center gap-2 text-sm text-slate-500">
+      <section className="relative">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-6 md:pt-8">
+          <Banner
+            src="/banners/hero-home.jpg"
+            imgHeight="md:h-[460px]"
+            title={<>{t("home.heroTitleA")}{" "}<span className="italic font-normal text-brand-600">{t("home.heroTitleB")}</span></>}
+            subtitle={t("home.heroSub")}
+            actions={<>
+              <Link href="/psychologists" className="btn-primary">
+                {t("home.findPsy")}
+                <IconChevronRight size={16} />
+              </Link>
+              <Link href="/for-psychologists" className="btn-secondary">
+                <IconUser size={16} />
+                {t("home.iAmPsy")}
+              </Link>
+            </>}
+            note={
+              <div className="inline-flex items-center gap-2 text-sm text-slate-500">
                 <IconShield size={16} className="text-mint-500" />
                 {t("home.trustLine")}
               </div>
-            </div>
-
-            <div className="relative lg:h-full">
-              <HeroIllustration className="w-full lg:absolute lg:right-[-6%] lg:top-1/2 lg:-translate-y-1/2 lg:w-[120%] max-w-2xl mx-auto" />
-            </div>
-          </div>
+            }
+          />
         </div>
 
         {/* Features card overlapping */}
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 relative -mt-2 md:-mt-6 pb-2">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 relative -mt-2 md:-mt-8 pb-2">
           <div className="rounded-2xl bg-white shadow-soft border border-brand-100/50 px-4 sm:px-6 py-5">
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-brand-100/70">
               {FEATURES.map((f) => (

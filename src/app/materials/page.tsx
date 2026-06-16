@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { MOCK_MATERIALS } from "@/lib/mock-data";
 import { formatKGS } from "@/lib/money";
-import { BooksIllustration } from "@/components/hero-illustration";
+import { Banner } from "@/components/banner";
 import { useT } from "@/components/lang-provider";
 import {
   IconHome, IconChevronRight,
@@ -66,28 +66,22 @@ export default function MaterialsPage() {
 
   return (
     <div className="bg-cream-50">
-      <section>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-8 pb-6">
-          <div className="grid items-center gap-8 lg:grid-cols-2">
-            <div>
-              <nav className="flex items-center gap-1.5 text-sm text-slate-500">
-                <Link href="/" className="inline-flex items-center gap-1 hover:text-brand">
-                  <IconHome size={14} /> {t("common.home")}
-                </Link>
-                <IconChevronRight size={12} />
-                <span className="text-slate-700 font-medium">{t("materials.title")}</span>
-              </nav>
-
-              <h1 className="h-display mt-5">{t("materials.title")}</h1>
-              <p className="mt-4 text-base md:text-lg text-slate-600 leading-relaxed">
-                {t("materials.sub")}
-              </p>
-            </div>
-            <div className="hidden lg:block">
-              <BooksIllustration className="w-full max-w-md mx-auto" />
-            </div>
-          </div>
-        </div>
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 pt-6 pb-6">
+        <Banner
+          src="/banners/hero-materials.jpg"
+          imgHeight="md:h-[380px]"
+          eyebrow={
+            <nav className="flex items-center gap-1.5 text-sm text-slate-500">
+              <Link href="/" className="inline-flex items-center gap-1 hover:text-brand">
+                <IconHome size={14} /> {t("common.home")}
+              </Link>
+              <IconChevronRight size={12} />
+              <span className="text-slate-700 font-medium">{t("materials.title")}</span>
+            </nav>
+          }
+          title={t("materials.title")}
+          subtitle={t("materials.sub")}
+        />
       </section>
 
       <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-2">

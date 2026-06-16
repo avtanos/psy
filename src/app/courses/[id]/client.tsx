@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { formatKGS } from "@/lib/money";
-import { HeroIllustration } from "@/components/hero-illustration";
+import { asset } from "@/lib/asset";
 import { useT } from "@/components/lang-provider";
 import {
   IconHome, IconChevronRight, IconChevronDown, IconCheck, IconCheckCircle,
@@ -106,8 +107,14 @@ export function CourseDetailClient({ course: c }: { course: Course }) {
                   </div>
                 </div>
 
-                <div>
-                  <HeroIllustration className="w-full max-w-sm mx-auto" />
+                <div className="overflow-hidden rounded-2xl shadow-card">
+                  <Image
+                    src={asset("/banners/hero-course.jpg")}
+                    alt=""
+                    width={1800}
+                    height={702}
+                    className="w-full h-48 md:h-full md:min-h-[260px] object-cover"
+                  />
                 </div>
               </div>
 
