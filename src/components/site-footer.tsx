@@ -25,6 +25,7 @@ export function SiteFooter() {
               <li><Link href="/materials" className="hover:text-brand">Материалы</Link></li>
               <li><Link href="/courses" className="hover:text-brand">Курсы</Link></li>
               <li><Link href="/about" className="hover:text-brand">О платформе</Link></li>
+              <li><Link href="/brochures" className="hover:text-brand">Брошюры по ролям</Link></li>
             </ul>
           </div>
 
