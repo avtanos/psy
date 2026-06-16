@@ -4,6 +4,7 @@
 
 :root {
   color-scheme: light;
+  --brand: #0D3941;
 }
 
 html, body {
@@ -11,30 +12,38 @@ html, body {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-[#FBFAF7] text-slate-900 antialiased;
+  font-feature-settings: "ss01", "cv11";
 }
 
-/* Безопасная зона для нижней панели на iOS */
 .safe-bottom {
   padding-bottom: calc(1rem + env(safe-area-inset-bottom));
 }
 
-/* Перенос длинных слов / URL на узких экранах */
 .break-anywhere {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
 
+/* === Buttons === */
 .btn {
-  @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors;
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all;
 }
 
 .btn-primary {
-  @apply btn bg-brand text-white hover:bg-brand-600 disabled:bg-brand-300;
+  @apply btn bg-brand text-white hover:bg-brand-600 shadow-sm disabled:bg-brand-300;
 }
 
 .btn-secondary {
-  @apply btn border border-brand-200 bg-white text-brand hover:bg-brand-50;
+  @apply btn border border-slate-200 bg-white text-brand hover:border-brand-200 hover:bg-brand-50;
+}
+
+.btn-light {
+  @apply btn bg-white text-brand hover:bg-brand-50;
+}
+
+.btn-pill {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all;
 }
 
 .btn-danger {
@@ -42,18 +51,54 @@ body {
 }
 
 .input {
-  @apply block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm
+  @apply block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm
          placeholder-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-100;
 }
 
 .label {
-  @apply mb-1 block text-sm font-medium text-slate-700;
+  @apply mb-1.5 block text-sm font-medium text-slate-700;
 }
 
 .card {
-  @apply rounded-xl border border-slate-200 bg-white p-5 shadow-sm;
+  @apply rounded-2xl border border-slate-100 bg-white p-6 shadow-card;
+}
+
+.card-soft {
+  @apply rounded-2xl bg-white p-6 shadow-soft;
 }
 
 .badge {
-  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+}
+
+.badge-verified {
+  @apply badge bg-mint-100 text-mint-700;
+}
+
+.chip {
+  @apply inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700
+         hover:border-brand-200 hover:bg-brand-50 transition-colors;
+}
+
+.chip-active {
+  @apply chip border-brand bg-brand text-white hover:bg-brand-600 hover:text-white hover:border-brand;
+}
+
+.h-display {
+  @apply text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-brand-700 leading-[1.05];
+}
+
+.h-section {
+  @apply text-2xl md:text-3xl font-bold text-brand-700;
+}
+
+/* Icon circle */
+.icon-circle {
+  @apply inline-flex shrink-0 items-center justify-center rounded-full bg-mint-100 text-brand;
+}
+
+/* Topic card hover */
+.topic-card {
+  @apply flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-card transition-all
+         hover:border-mint-200 hover:shadow-soft;
 }

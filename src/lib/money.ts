@@ -1,5 +1,3 @@
-// Все суммы хранятся в тыйынах (1 сом = 100 тыйынов).
-
 export function tyiynToSom(tyiyn: number): number {
   return Math.round(tyiyn) / 100;
 }
@@ -10,11 +8,11 @@ export function somToTyiyn(som: number): number {
 
 export function formatKGS(tyiyn: number): string {
   const v = tyiynToSom(tyiyn);
-  return new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: "KGS",
+  const formatted = new Intl.NumberFormat("ru-RU", {
     minimumFractionDigits: v % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
   }).format(v);
+  return `${formatted} KGS`;
 }
 
 export function splitCommission(amount: number, commissionPercent: number) {

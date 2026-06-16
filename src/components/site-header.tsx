@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MobileMenu } from "./mobile-menu";
+import { IconChevronDown } from "./icons";
 
 const NAV = [
   { href: "/psychologists", label: "Психологи" },
@@ -10,32 +11,35 @@ const NAV = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-        <Link href="/" className="flex shrink-0 items-center gap-2">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand text-white font-bold">
+    <header className="sticky top-0 z-30 bg-brand-700 text-white">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 py-4">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-mint-100 text-brand-700 text-xl font-semibold">
             Ψ
           </span>
-          <span className="text-base font-semibold text-brand">PsychKG</span>
+          <span className="text-lg font-semibold tracking-tight">PsychKG</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-5 text-sm">
+        <nav className="hidden lg:flex items-center gap-8 text-sm">
           {NAV.map((n) => (
-            <Link key={n.href} href={n.href} className="text-slate-700 hover:text-brand">
+            <Link key={n.href} href={n.href} className="text-white/90 hover:text-white font-medium">
               {n.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-2">
-          <Link href="/me" className="btn-secondary">
-            Демо: Клиент
+        <div className="hidden lg:flex items-center gap-2.5">
+          <button className="inline-flex items-center gap-1.5 rounded-full bg-white/10 hover:bg-white/15 px-4 py-2 text-sm font-medium">
+            Русский <IconChevronDown size={14} />
+          </button>
+          <Link href="/login" className="inline-flex items-center rounded-full bg-white/10 hover:bg-white/15 px-5 py-2 text-sm font-medium">
+            Войти
           </Link>
-          <Link href="/psychologist" className="btn-secondary">
-            Демо: Психолог
-          </Link>
-          <Link href="/admin" className="btn-secondary">
-            Демо: Админ
+          <Link
+            href="/register"
+            className="inline-flex items-center rounded-full bg-white text-brand-700 hover:bg-mint-50 px-5 py-2 text-sm font-semibold shadow-sm"
+          >
+            Стать клиентом
           </Link>
         </div>
 
@@ -46,12 +50,10 @@ export function SiteHeader() {
               <Link href="/me" className="btn-primary w-full">Демо: Клиент</Link>
               <Link href="/psychologist" className="btn-secondary w-full">Демо: Психолог</Link>
               <Link href="/admin" className="btn-secondary w-full">Демо: Админ</Link>
+              <Link href="/login" className="btn-secondary w-full">Войти</Link>
             </div>
           }
         />
-      </div>
-      <div className="bg-brand-50 border-b border-brand-100 px-4 py-1.5 text-center text-xs text-brand-700">
-        Демо-версия — серверные функции (авторизация, БД, платежи) недоступны
       </div>
     </header>
   );
