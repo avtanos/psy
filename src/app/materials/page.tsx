@@ -1,35 +1,25 @@
+"use client";
+
 import Link from "next/link";
 import { MOCK_MATERIALS } from "@/lib/mock-data";
 import { formatKGS } from "@/lib/money";
 import { BooksIllustration } from "@/components/hero-illustration";
+import { useT } from "@/components/lang-provider";
 import {
   IconHome, IconChevronRight,
   IconGrid, IconHeartSmall, IconLock, IconDocument, IconPdf,
   IconHeadphones, IconVideo, IconCheckCircle, IconNotebook,
 } from "@/components/icons";
 
-const FILTERS = [
-  { key: "all", label: "Все", icon: IconGrid, active: true },
-  { key: "free", label: "Бесплатно", icon: IconHeartSmall },
-  { key: "paid", label: "Платно", icon: IconLock },
-  { key: "ARTICLE", label: "Статья", icon: IconDocument },
-  { key: "PDF", label: "PDF", icon: IconPdf },
-  { key: "AUDIO", label: "Аудио", icon: IconHeadphones },
-  { key: "VIDEO", label: "Видео", icon: IconVideo },
-  { key: "TEST", label: "Тест", icon: IconCheckCircle },
-  { key: "WORKBOOK", label: "Рабочая тетрадь", icon: IconNotebook },
-];
-
-const KIND_LABELS: Record<string, { label: string; icon: typeof IconDocument }> = {
-  ARTICLE: { label: "Статья", icon: IconDocument },
-  PDF: { label: "PDF", icon: IconPdf },
-  AUDIO: { label: "Аудио", icon: IconHeadphones },
-  VIDEO: { label: "Видео", icon: IconVideo },
-  TEST: { label: "Тест", icon: IconCheckCircle },
-  WORKBOOK: { label: "Рабочая тетрадь", icon: IconNotebook },
+const KIND_LABELS: Record<string, { icon: typeof IconDocument }> = {
+  ARTICLE: { icon: IconDocument },
+  PDF: { icon: IconPdf },
+  AUDIO: { icon: IconHeadphones },
+  VIDEO: { icon: IconVideo },
+  TEST: { icon: IconCheckCircle },
+  WORKBOOK: { icon: IconNotebook },
 };
 
-// Different gradient backgrounds for material previews
 const PREVIEW_BG: Record<string, string> = {
   ARTICLE: "from-mint-100 via-mint-50 to-cream-100",
   PDF: "from-cream-100 via-mint-50 to-cream-50",
@@ -39,7 +29,7 @@ const PREVIEW_BG: Record<string, string> = {
   WORKBOOK: "from-mint-100 via-mint-50 to-cream-100",
 };
 
-function MaterialPreview({ kind, title }: { kind: string; title: string }) {
+function MaterialPreview({ kind }: { kind: string }) {
   const Icon = KIND_LABELS[kind]?.icon ?? IconDocument;
   const gradient = PREVIEW_BG[kind] ?? "from-mint-100 via-mint-50 to-cream-100";
 
@@ -59,27 +49,38 @@ function MaterialPreview({ kind, title }: { kind: string; title: string }) {
 }
 
 export default function MaterialsPage() {
+  const t = useT();
   const items = MOCK_MATERIALS;
+
+  const FILTERS = [
+    { key: "all", label: t("common.all"), icon: IconGrid, active: true },
+    { key: "free", label: t("common.free"), icon: IconHeartSmall },
+    { key: "paid", label: t("common.paid"), icon: IconLock },
+    { key: "ARTICLE", label: t("materials.kind.ARTICLE"), icon: IconDocument },
+    { key: "PDF", label: t("materials.kind.PDF"), icon: IconPdf },
+    { key: "AUDIO", label: t("materials.kind.AUDIO"), icon: IconHeadphones },
+    { key: "VIDEO", label: t("materials.kind.VIDEO"), icon: IconVideo },
+    { key: "TEST", label: t("materials.kind.TEST"), icon: IconCheckCircle },
+    { key: "WORKBOOK", label: t("materials.kind.WORKBOOK"), icon: IconNotebook },
+  ];
 
   return (
     <div className="bg-[#FBFAF7]">
-      {/* Breadcrumbs + Heading */}
       <section>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-8 pb-6">
           <div className="grid items-center gap-8 lg:grid-cols-2">
             <div>
               <nav className="flex items-center gap-1.5 text-sm text-slate-500">
                 <Link href="/" className="inline-flex items-center gap-1 hover:text-brand">
-                  <IconHome size={14} /> Главная
+                  <IconHome size={14} /> {t("common.home")}
                 </Link>
                 <IconChevronRight size={12} />
-                <span className="text-slate-700 font-medium">Материалы</span>
+                <span className="text-slate-700 font-medium">{t("materials.title")}</span>
               </nav>
 
-              <h1 className="h-display mt-5">Материалы</h1>
+              <h1 className="h-display mt-5">{t("materials.title")}</h1>
               <p className="mt-4 text-base md:text-lg text-slate-600 leading-relaxed">
-                Статьи, рабочие тетради, аудио и видео от проверенных психологов.<br />
-                Практические инструменты для вашего ментального благополучия.
+                {t("materials.sub")}
               </p>
             </div>
             <div className="hidden lg:block">
@@ -89,7 +90,6 @@ export default function MaterialsPage() {
         </div>
       </section>
 
-      {/* Filter chips */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-2">
         <div className="flex flex-wrap items-center gap-2">
           {FILTERS.map((f) => (
@@ -101,18 +101,18 @@ export default function MaterialsPage() {
         </div>
       </section>
 
-      {/* Cards grid */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((m) => {
-            const kind = KIND_LABELS[m.kind] ?? KIND_LABELS.ARTICLE;
+            const kindIcon = KIND_LABELS[m.kind]?.icon ?? IconDocument;
+            const KIcon = kindIcon;
             return (
               <Link key={m.id} href={`/materials/${m.id}`} className="group">
                 <article className="overflow-hidden rounded-2xl bg-white shadow-card transition-all hover:shadow-soft border border-slate-100">
                   <div className="relative">
-                    <MaterialPreview kind={m.kind} title={m.title} />
+                    <MaterialPreview kind={m.kind} />
                     <span className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-xs font-medium text-brand-700 shadow-sm">
-                      <kind.icon size={12} /> {kind.label}
+                      <KIcon size={12} /> {t(`materials.kind.${m.kind}`)}
                     </span>
                   </div>
                   <div className="p-5">
@@ -126,7 +126,7 @@ export default function MaterialsPage() {
                         <span className="text-xs text-slate-600 truncate">{m.authorName}</span>
                       </div>
                       <span className={"text-sm font-semibold shrink-0 " + (m.price === 0 ? "text-mint-600" : "text-brand-700")}>
-                        {m.price === 0 ? "Бесплатно" : formatKGS(m.price)}
+                        {m.price === 0 ? t("common.free") : formatKGS(m.price)}
                       </span>
                     </div>
                   </div>

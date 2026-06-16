@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useT } from "./lang-provider";
 
 export function SiteFooter() {
+  const t = useT();
+
   return (
     <footer className="border-t border-slate-100 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12">
@@ -12,54 +17,53 @@ export function SiteFooter() {
               </span>
               <span className="text-lg font-semibold tracking-tight text-brand-700">PsychKG</span>
             </div>
-            <p className="mt-4 text-sm text-slate-600 leading-relaxed">
-              Платформа психологической помощи<br />и онлайн-консультаций.<br />
-              Кыргызская Республика.
+            <p className="mt-4 text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+              {t("footer.tagline")}
             </p>
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-slate-800">Платформа</div>
+            <div className="text-sm font-semibold text-slate-800">{t("footer.platform")}</div>
             <ul className="mt-3 space-y-2 text-sm text-slate-600">
-              <li><Link href="/psychologists" className="hover:text-brand">Психологи</Link></li>
-              <li><Link href="/materials" className="hover:text-brand">Материалы</Link></li>
-              <li><Link href="/courses" className="hover:text-brand">Курсы</Link></li>
-              <li><Link href="/about" className="hover:text-brand">О платформе</Link></li>
-              <li><Link href="/brochures" className="hover:text-brand">Брошюры по ролям</Link></li>
+              <li><Link href="/psychologists" className="hover:text-brand">{t("nav.psychologists")}</Link></li>
+              <li><Link href="/materials" className="hover:text-brand">{t("nav.materials")}</Link></li>
+              <li><Link href="/courses" className="hover:text-brand">{t("nav.courses")}</Link></li>
+              <li><Link href="/about" className="hover:text-brand">{t("nav.about")}</Link></li>
+              <li><Link href="/brochures" className="hover:text-brand">{t("nav.brochures")}</Link></li>
             </ul>
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-slate-800">Помощь</div>
+            <div className="text-sm font-semibold text-slate-800">{t("footer.help")}</div>
             <ul className="mt-3 space-y-2 text-sm text-slate-600">
-              <li><Link href="/legal/terms" className="hover:text-brand">Оферта</Link></li>
-              <li><Link href="/legal/privacy" className="hover:text-brand">Политика конфиденциальности</Link></li>
-              <li><Link href="/legal/consent" className="hover:text-brand">Согласие на обработку данных</Link></li>
-              <li><span className="hover:text-brand">Часто задаваемые вопросы</span></li>
+              <li><Link href="/legal/terms" className="hover:text-brand">{t("footer.terms")}</Link></li>
+              <li><Link href="/legal/privacy" className="hover:text-brand">{t("footer.privacy")}</Link></li>
+              <li><Link href="/legal/consent" className="hover:text-brand">{t("footer.consent")}</Link></li>
+              <li><span className="hover:text-brand">{t("footer.faq")}</span></li>
             </ul>
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-slate-800">Психологам</div>
+            <div className="text-sm font-semibold text-slate-800">{t("footer.psychologists")}</div>
             <ul className="mt-3 space-y-2 text-sm text-slate-600">
-              <li><Link href="/for-psychologists" className="hover:text-brand">Стать психологом</Link></li>
-              <li><span className="hover:text-brand">Требования и документы</span></li>
-              <li><span className="hover:text-brand">Помощь специалистам</span></li>
+              <li><Link href="/for-psychologists" className="hover:text-brand">{t("footer.becomePsy")}</Link></li>
+              <li><span className="hover:text-brand">{t("footer.requirements")}</span></li>
+              <li><span className="hover:text-brand">{t("footer.helpSpec")}</span></li>
             </ul>
           </div>
 
           <div className="lg:col-span-1">
-            <div className="text-sm font-semibold text-slate-800">Будьте в курсе полезного</div>
+            <div className="text-sm font-semibold text-slate-800">{t("footer.subscribeT")}</div>
             <p className="mt-3 text-sm text-slate-600">
-              Подпишитесь на рассылку с материалами и анонсами курсов.
+              {t("footer.subscribeS")}
             </p>
             <form className="mt-4 flex gap-2">
               <input
                 type="email"
-                placeholder="Ваш e-mail"
+                placeholder={t("footer.emailPh")}
                 className="input flex-1"
               />
-              <button type="button" className="btn-primary shrink-0">Подписаться</button>
+              <button type="button" className="btn-primary shrink-0">{t("footer.subscribe")}</button>
             </form>
           </div>
         </div>
@@ -73,8 +77,7 @@ export function SiteFooter() {
             ))}
           </div>
           <div>
-            © {new Date().getFullYear()} PsychKG. Обработка персональных данных
-            соответствует Цифровому кодексу КР № 178 от 31.07.2025.
+            © {new Date().getFullYear()} {t("footer.legal")}
           </div>
         </div>
       </div>
