@@ -42,6 +42,21 @@ export default function ClientDashboard() {
         </ul>
       </div>
 
+      <div className="rounded-2xl border border-rose-100 bg-rose-50/60 p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="font-semibold text-rose-700">Чувствуете, что вам тяжело?</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Короткая проверка безопасности поможет понять, нужна ли срочная поддержка. Если опасность сейчас — звоните 103 или 112.
+          </p>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <Link href="/me/safety-check" className="btn-secondary !py-2.5 !text-sm">Проверка безопасности</Link>
+          <Link href="/help/crisis" className="inline-flex items-center justify-center rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-rose-700">
+            Срочная помощь
+          </Link>
+        </div>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="card">
           <h2 className="font-medium text-slate-800">Купленные материалы</h2>

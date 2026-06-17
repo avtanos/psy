@@ -260,6 +260,27 @@ export const IconSparkles = ({ className, size }: IconProps) => (
   </svg>
 );
 
+export const IconPhone = ({ className, size }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 5 5L19 13l2 5v3a1 1 0 0 1-1 1A16 16 0 0 1 4 6a1 1 0 0 1 1-2Z" />
+  </svg>
+);
+
+export const IconAlert = ({ className, size }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <path d="M12 3 2 20h20L12 3Z" />
+    <path d="M12 10v5M12 18h.01" />
+  </svg>
+);
+
+export const IconLifeRing = ({ className, size }: IconProps) => (
+  <svg {...base(size)} className={className}>
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="12" cy="12" r="3.5" />
+    <path d="m5 5 4.2 4.2M14.8 14.8 19 19M19 5l-4.2 4.2M5 19l4.2-4.2" />
+  </svg>
+);
+
 export const IconRefresh = ({ className, size }: IconProps) => (
   <svg {...base(size)} className={className}>
     <path d="M21 12a9 9 0 1 1-2.64-6.36" />

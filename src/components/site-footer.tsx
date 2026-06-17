@@ -43,6 +43,11 @@ export function SiteFooter() {
           <div>
             <div className="text-sm font-semibold text-slate-800">{t("footer.help")}</div>
             <ul className="mt-3 space-y-2 text-sm text-slate-600">
+              <li>
+                <Link href="/help/crisis" className="inline-flex items-center gap-1.5 font-medium text-rose-600 hover:text-rose-700">
+                  🆘 {t("nav.crisisHelp")}
+                </Link>
+              </li>
               <li><Link href="/legal/terms" className="hover:text-brand">{t("footer.terms")}</Link></li>
               <li><Link href="/legal/privacy" className="hover:text-brand">{t("footer.privacy")}</Link></li>
               <li><Link href="/legal/consent" className="hover:text-brand">{t("footer.consent")}</Link></li>

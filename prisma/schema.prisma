@@ -46,6 +46,7 @@ model User {
   reviewsWritten  Review[]   @relation("ReviewAuthor")
   adminActions    AdminLog[]
   verificationCodes VerificationCode[]
+  riskScreenings  RiskScreening[]
 
   @@index([role, status])
 }
@@ -543,4 +544,57 @@ model AdminLog {
 model SystemSetting {
   key   String @id
   value String
+}
+
+// ===== Кризисный протокол =====
+// RiskLevel: NONE | LOW | MODERATE | HIGH | IMMINENT
+// Скрининг суицидального риска (C-SSRS), эскалация и дежурный супервайзер.
+
+model RiskScreening {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookingId   String?
+  instrument  String   @default("C-SSRS")
+  answers     String   // JSON: { q1..q6, q6recent }
+  riskLevel   String
+  createdAt   DateTime @default(now())
+
+  crisisCase  CrisisCase?
+
+  @@index([userId, createdAt])
+  @@index([riskLevel])
+}
+
+// CrisisCaseStatus: OPEN | ACKNOWLEDGED | IN_CONTACT | RESOLVED | CLOSED
+model CrisisCase {
+  id             String   @id @default(cuid())
+  screeningId    String?  @unique
+  screening      RiskScreening? @relation(fields: [screeningId], references: [id])
+  userId         String
+  riskLevel      String
+  status         String   @default("OPEN")
+  supervisorId   String?  // дежурный, принявший кейс
+  acknowledgedAt DateTime?
+  contactedAt    DateTime?
+  resolvedAt     DateTime?
+  outcome        String?  // напр. "referred_emergency" | "safety_plan" | "booked_session"
+  notes          String?  // шифруется на уровне приложения (как PsychologistNote)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([riskLevel])
+}
+
+// Дежурный супервайзер (on-call), которому уходят кризис-кейсы.
+model OnCallShift {
+  id           String   @id @default(cuid())
+  supervisorId String
+  startAt      DateTime
+  endAt        DateTime
+  phone        String?
+  createdAt    DateTime @default(now())
+
+  @@index([startAt, endAt])
 }

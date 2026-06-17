@@ -24,6 +24,16 @@ export default function AdminDashboard() {
         <Stat label="К выплате психологам" value={formatKGS(s.totalPsychologistPayout)} />
       </div>
 
+      <Link href="/admin/crisis" className="block rounded-2xl border-2 border-rose-200 bg-rose-50/70 p-5 hover:border-rose-300 transition-colors">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h3 className="font-semibold text-rose-700">🆘 Кризисные кейсы</h3>
+            <p className="mt-1 text-sm text-slate-600">Очередь срочных обращений из скрининга безопасности. Реагирование по протоколу.</p>
+          </div>
+          <span className="rounded-full bg-rose-600 px-3 py-1 text-sm font-semibold text-white shrink-0">1 новый</span>
+        </div>
+      </Link>
+
       <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3">
         <Link href="/admin/verifications" className="card hover:border-brand">
           <h3 className="font-medium text-slate-800">Верификация психологов</h3>

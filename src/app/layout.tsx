@@ -4,6 +4,7 @@ import { Inter, Lora } from "next/font/google";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { LangProvider } from "@/components/lang-provider";
+import { CrisisFab } from "@/components/crisis-fab";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SiteHeader />
           <main className="flex-1">{children}</main>
           <SiteFooter />
+          <CrisisFab />
         </LangProvider>
       </body>
     </html>
