@@ -115,6 +115,7 @@ model PsychologistProfile {
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   source         String   @default("IN_HOUSE")
   photoUrl       String?
+  gender         String?  // "F" | "M" — для подбора по предпочтению клиента
   bio            String?
   approach       String?
   experienceYears Int     @default(0)

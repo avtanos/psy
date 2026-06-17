@@ -9,7 +9,7 @@ import { Banner } from "@/components/banner";
 import { useT } from "@/components/lang-provider";
 import {
   IconShield, IconSearch, IconStar, IconCheck, IconGrid, IconList,
-  IconArrowRight, IconArrowLeft, IconRefresh,
+  IconArrowRight, IconArrowLeft, IconRefresh, IconSparkles, IconChevronRight,
 } from "@/components/icons";
 
 const QUICK_FILTERS = ["anxiety", "relationships", "depression", "self-esteem", "family", "trauma", "addiction", "career"];
@@ -53,13 +53,27 @@ export default function PsychologistsPage() {
       </div>
 
       {/* Hero */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 pt-6 pb-6">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 pt-6 pb-4">
         <Banner
           src="/banners/hero-catalog.jpg"
           imgHeight="md:h-[360px]"
           title={t("catalog.title")}
           subtitle={t("catalog.sub")}
         />
+      </section>
+
+      {/* Guided matching CTA */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-4">
+        <Link href="/intake" className="flex items-center justify-between gap-3 rounded-2xl bg-brand-700 text-white px-5 py-4 hover:bg-brand-600 transition-colors">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="icon-circle h-10 w-10 bg-white/10 text-white shrink-0"><IconSparkles size={18} /></span>
+            <div className="min-w-0">
+              <div className="font-semibold">{t("intake.cta")}</div>
+              <div className="text-sm text-mint-200 truncate">{t("intake.ctaSub")}</div>
+            </div>
+          </div>
+          <IconChevronRight size={20} className="shrink-0" />
+        </Link>
       </section>
 
       {/* Filters */}

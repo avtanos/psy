@@ -57,7 +57,7 @@ export default function Home() {
             title={<>{t("home.heroTitleA")}{" "}<span className="italic font-normal text-brand-600">{t("home.heroTitleB")}</span></>}
             subtitle={t("home.heroSub")}
             actions={<>
-              <Link href="/psychologists" className="btn-primary">
+              <Link href="/intake" className="btn-primary">
                 {t("home.findPsy")}
                 <IconChevronRight size={16} />
               </Link>
